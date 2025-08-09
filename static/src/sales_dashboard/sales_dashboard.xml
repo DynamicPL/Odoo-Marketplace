@@ -1,0 +1,497 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<templates xml:space="preserve">
+    <t t-name="odoo_marketplace.mp_sales_dashboard" owl="1">
+        <div class="vh-100 overflow-auto">
+            <div class="row m-2">
+                <div class="col-lg-12">
+                    <h1 id="analytics" class="mt-2" style="
+                        font-size: 28px;
+                        font-weight: 700;
+                        text-align: left;
+                        ">ANALYTICS DASHBOARD</h1>
+                    <!-- HEADER SECTION -->
+                    <div class="row">
+                        <div class="col m-0 p-0">
+                            <div id="header" class="dashboard-card shadow-sm border m-2 p-4 bg-white">
+                                <div class="d-flex flex-column flex-md-row align-items-center justify-content-between">
+                                    <p style="font-size: 16px; font-weight: 600; line-height: 24px; text-align: left; margin-right: 10px;">Over All Stats</p>
+                                    <div class="d-flex flex-column flex-sm-row align-items-center">
+                                        <div>
+                                            <select class="form-select rounded border border-secondary" id="period" style="background-color: white !important" t-on-change="handleSelectChange">
+                                                <option value="7">Select Period</option>
+                                                <option value="1">Today</option>
+                                                <option value="2">Yesterday</option>
+                                                <option value="7" selected="True">Last 7 Days</option>
+                                                <option value="30">Last 30 Days</option>
+                                                <option value="90">Last 90 Days</option>
+                                                <option value="365">Last 365 Days</option>
+                                                <option value="custom">Custom</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="p-0" id="custom_dates" style="display:none" t-on-change="setCustomDates">
+                                        <div class="d-flex flex-column flex-sm-row">
+                                            <div class="d-flex flex-column flex-sm-row" style="margin-bottom:20px">
+                                                <div class="startDate mx-3 my-0">
+                                                    <label for="start_date">Start Date: </label>
+                                                    <input class="check_date rounded border border-secondary" type="date" id="start_date"/>
+                                                </div>
+                                                <div class="endDate mx-3 my-0">
+                                                    <label for="end_date">End Date: </label>
+                                                    <input class="check_date rounded border border-secondary" type="date" id="end_date" />
+                                                </div>
+                                            </div>
+                                            <div class="d-flex justify-content-center align-items-center">
+                                                <button id="applyFilter" class="mt-2">
+                                                    <span>Apply Filter</span>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 74 74" height="34" width="34">
+                                                        <circle stroke-width="3" stroke="black" r="35.5" cy="37" cx="37"></circle>
+                                                        <path fill="black" d="M25 35.5C24.1716 35.5 23.5 36.1716 23.5 37C23.5 37.8284 24.1716 38.5 25 38.5V35.5ZM49.0607 38.0607C49.6464 37.4749 49.6464 36.5251 49.0607 35.9393L39.5147 26.3934C38.9289 25.8076 37.9792 25.8076 37.3934 26.3934C36.8076 26.9792 36.8076 27.9289 37.3934 28.5147L45.8787 37L37.3934 45.4853C36.8076 46.0711 36.8076 47.0208 37.3934 47.6066C37.9792 48.1924 38.9289 48.1924 39.5147 47.6066L49.0607 38.0607ZM25 38.5L48 38.5V35.5L25 35.5V38.5Z"></path>
+                                                    </svg>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <!-- CARD SECTION -->
+                                <div class="row mt-2">
+                                    <div class="col col-md-6 col-lg-3 m-0 p-0">
+                                        <div id="card_total_orders" class="card main-card dashboard-card border m-2 px-2 px-md-4 bg-white" style="cursor: pointer; overflow: hidden;">
+                                            <div class="card-body d-flex align-items-center">
+                                                <div class="card-text dashboard-card-body flex-grow-1 mt-2 text-start mb-0" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">
+                                                    <t t-esc="state.solCount"/>
+                                                    <p class="card-title mb-0 text-muted w-100">Total Orders</p>
+                                                </div>
+                                                <img src="odoo_marketplace/static/src/sales_dashboard/dashboard_icons/order.png" class="img-fluid" style="max-width: 80px; max-height: 80px; object-fit: contain;"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col col-md-6 col-lg-3 m-0 p-0">
+                                        <div id="card_total_products" class="card main-card dashboard-card border m-2 px-2 px-md-4 bg-white" style="cursor: pointer; overflow: hidden;">
+                                            <div class="card-body d-flex align-items-center">
+                                                <div class="card-text dashboard-card-body flex-grow-1 mt-2 text-start mb-0" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">
+                                                    <t t-esc="state.totalProducts"/>
+                                                    <p class="card-title mb-0 text-muted">Total Products</p>
+                                                </div>
+                                                <img src="odoo_marketplace/static/src/sales_dashboard/dashboard_icons/product.png" class="img-fluid" style="max-width: 80px; max-height: 80px; object-fit: contain;"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col col-md-6 col-lg-3 m-0 p-0">
+                                        <div id="card_total_sales" class="card main-card dashboard-card border m-2 px-2 px-md-4 bg-white" style="cursor: pointer; overflow: hidden;">
+                                            <div class="card-body d-flex align-items-center">
+                                                <div class="card-text dashboard-card-body flex-grow-1 mt-2 text-start mb-0" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">
+                                                    <t t-esc="state.currency"/>
+                                                    <t t-esc="state.totalSaleAmount"/>
+                                                    <p class="card-title mb-0 text-muted">Total Sales</p>
+                                                </div>
+                                                <img src="odoo_marketplace/static/src/sales_dashboard/dashboard_icons/sales.png" class="img-fluid" style="max-width: 80px; max-height: 80px; object-fit: contain;"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col col-md-6 col-lg-3 m-0 p-0">
+                                        <div id="card_total_comm" class="card main-card dashboard-card border m-2 px-2 px-md-4 bg-white" style="cursor: pointer; overflow: hidden;">
+                                            <div class="card-body d-flex align-items-center">
+                                                <div class="card-text dashboard-card-body flex-grow-1 mt-2 text-start mb-0" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">
+                                                    <t t-esc="state.currency"/>
+                                                    <t t-esc="state.adminCommission"/>
+                                                    <p class="card-title mb-0 text-muted">Total Commission</p>
+                                                </div>
+                                                <img src="odoo_marketplace/static/src/sales_dashboard/dashboard_icons/commission.png" class="img-fluid" style="max-width: 80px; max-height: 80px; object-fit: contain;"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-12">
+                        <div id="dashboard-content" class="row">
+
+                            <!-- SALES -->
+                            <div class="col-lg-6 m-0 p-0">
+                                <div id="chart_sales" class="dashboard-card border m-2 p-4 bg-white rounded-3">
+                                    <div class="d-sm-flex align-items-center my-2 justify-content-between">
+                                        <h3 class="flex-grow-1 fw-bold m-0">Marketplace Sales</h3>
+                                        <div class="d-flex">
+
+                                            <div class="mr-3 sales-wrapper" style="padding:6px; border-radius:8px; height:fit-content;">
+
+                                                <div class="d-flex rounded border border-secondary" t-on-change="salesGraphSelect">
+                                                    <input type="radio" class="btn-check sales-options" name="options-outlined-sales" id="sales-graph-1" value="salesg1" checked="True"/>
+                                                    <input type="radio" class="btn-check sales-options" name="options-outlined-sales" id="sales-graph-2" value="salesg2"/>
+                                                    <label for="sales-graph-1" class="sales-graph sales-graph-1">
+                                                        <img class="icon" src="odoo_marketplace/static/src/sales_dashboard/dashboard_icons/barChart.png"/>
+                                                    </label>
+                                                    <label for="sales-graph-2" class="sales-graph sales-graph-2">
+                                                        <img src="odoo_marketplace/static/src/sales_dashboard/dashboard_icons/lineChart.png"/>
+                                                    </label>
+                                                </div>
+
+
+                                                <div style="margin: 0px 16px;">
+                                                    <select class="form-select mr-3 my-1 select-chart rounded border border-secondary" id="sales-filter" t-on-change="handleSalesSelectChange">
+                                                        <option value="W" class="p-3" select="True">Weekly</option>
+                                                        <option value="M">Monthly</option>
+                                                        <option value="Y">Yearly</option>
+                                                    </select>
+                                                </div>
+
+                                                <div>
+                                                    <img src="odoo_marketplace/static/src/sales_dashboard/dashboard_icons/records.png" class="chart-view-icon" data-tooltip="View Marketplace Sales records" id="chartSales" t-on-click="(ev) => this.openSalesChart()"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <t t-if="state.noMpSalesData">
+                                        <div class="text-center p-4">
+                                            <h4 class="text-muted">No Record Found...</h4>
+                                        </div>
+                                    </t>
+                                    <t t-else="">
+                                        <t t-if="state.graph_type == 'salesg2'">
+                                            <ChartRenderer type="'line'" config="state.sales"/>
+                                        </t>
+                                        <t t-else="">
+                                            <ChartRenderer type="'bar'" config="state.sales"/>
+                                        </t>
+                                    </t>
+                                </div>
+                            </div>
+
+                            <!-- ACTIVE & REGISTERES SELLERS -->
+                            <t t-if="state.isAdmin">
+                                <div class="col-lg-6 m-0 p-0">
+                                    <div id="chart_active_sellers" class="dashboard-card border m-2 p-4 bg-white rounded-3">
+                                        <div class="d-sm-flex align-items-center my-2 justify-content-between">
+                                            <h3 class="flex-grow-1 fw-bold m-0">Marketplace Sellers</h3>
+
+                                            <div class="d-flex">
+                                                <div class="mr-3 sellers-wrapper" style="padding:6px; border-radius:8px; height:fit-content;">
+
+                                                    <div class="d-flex rounded border border-secondary bg-secondary" t-on-change="sellersGraphSelect">
+                                                        <input type="radio" class="btn-check sellers-options" name="options-outlined-seller" id="sellers-graph-1" value="sellersg1" checked="True"/>
+                                                        <input type="radio" class="btn-check sellers-options" name="options-outlined-seller" id="sellers-graph-2" value="sellersg2"/>
+                                                        <label for="sellers-graph-1" class="sellers-graph sellers-graph-1">
+                                                            <img class="icon" src="odoo_marketplace/static/src/sales_dashboard/dashboard_icons/barChart.png"/>
+                                                        </label>
+                                                        <label for="sellers-graph-2" class="sellers-graph sellers-graph-2">
+                                                            <img src="odoo_marketplace/static/src/sales_dashboard/dashboard_icons/lineChart.png"/>
+                                                        </label>
+                                                    </div>
+
+
+                                                    <div style="margin: 0px 16px;">
+                                                        <select class="form-select mr-3 my-1 select-chart rounded border border-secondary" id="active-seller-filter" t-on-change="handleActiveSellersSelectChange">
+                                                            <option value="W" class="p-3" select="True">Weekly</option>
+                                                            <option value="M">Monthly</option>
+                                                            <option value="Y">Yearly</option>
+                                                        </select>
+                                                    </div>
+
+                                                    <div>
+                                                        <img src="odoo_marketplace/static/src/sales_dashboard/dashboard_icons/records.png" class="chart-view-icon" data-tooltip="View all New Registered Sellers" id="chartSellers" t-on-click="(ev) => this.openSellersChart()"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <t t-if="state.noMpSellersData">
+                                            <div class="text-center p-4">
+                                                <h4 class="text-muted">No Record Found...</h4>
+                                            </div>
+                                        </t>
+                                        <t t-else="">
+                                            <t t-if="state.sellersGraphType == 'sellersg2'">
+                                                <ChartRenderer type="'line'" config="state.sellers"/>
+                                            </t>
+                                            <t t-else="">
+                                                <ChartRenderer type="'bar'" config="state.sellers"/>
+                                            </t>
+                                        </t>
+                                    </div>
+                                </div>
+                            </t>
+
+                            <!-- TOTAL ORDERS -->
+                            <div class="col-lg-6 m-0 p-0">
+                                <div id="chart_orders" class="dashboard-card border m-2 p-4 bg-white rounded-3">
+                                    <div class="d-md-flex flex-column flex-md-row align-items-center justify-content-between">
+                                        <h3 class="flex-grow-1 fw-bold">Total Orders</h3>
+                                        <div class="d-flex align-items-center mt-2 mt-md-0">
+                                            <div style="margin-right: 16px;">
+                                                <select class="form-select mr-3 my-3 select-chart rounded border border-secondary" id="total-orders" t-on-change="handleTotalOrdersSelectChange">
+                                                    <option value="W" class="p-3" select="True">Weekly</option>
+                                                    <option value="M">Monthly</option>
+                                                    <option value="Y">Yearly</option>
+                                                </select>
+                                            </div>
+                                            <img src="odoo_marketplace/static/src/sales_dashboard/dashboard_icons/records.png" class="chart-view-icon" data-tooltip="View Marketplace Sale Order records" id="chartOrders" t-on-click="() => this.openOrdersChart()"/>
+                                        </div>
+                                    </div>
+                                    <t t-if="state.noMpOrdersData">
+                                        <div class="text-center p-4">
+                                            <h4 class="text-muted">No Record Found...</h4>
+                                        </div>
+                                    </t>
+                                    <t t-else="">
+                                        <ChartRenderer type="'bar'" config="state.orders"/>
+                                    </t>
+                                </div>
+                            </div>
+
+                            <!-- Top Performing Sellers -->
+                            <t t-if="state.isAdmin">
+                                <div class="col-lg-6 m-0 p-0">
+                                    <div id="chart_top_sellers" class="dashboard-card border m-2 p-4 bg-white rounded-3">
+                                        <div class="d-md-flex flex-column flex-md-row align-items-center justify-content-between">
+                                            <h3 class="flex-grow-1 fw-bold">Top Performing Sellers</h3>
+                                            <div class="d-flex align-items-center mt-2 mt-md-0">
+                                                <div style="margin-right: 16px;">
+                                                    <select class="form-select mr-3 my-3 select-chart rounded border border-secondary" id="performing-sellers" t-on-change="handlePerformingSelectChange">
+                                                        <option value="W" class="p-3" select="True">Weekly</option>
+                                                        <option value="M">Monthly</option>
+                                                        <option value="Y">Yearly</option>
+                                                    </select>
+                                                </div>
+                                                <input type="hidden" name="seller_ids" t-att-value="state.sellerIds"/>
+                                                <img src="odoo_marketplace/static/src/sales_dashboard/dashboard_icons/records.png" class="chart-view-icon" data-tooltip="View Marketplace Top Sellers" id="chartTopSellers" t-on-click="() => this.openchartTopSellers()"/>
+                                            </div>
+                                        </div>
+                                        <t t-if="state.noMpTopSellersData">
+                                            <div class="text-center p-4">
+                                                <h4 class="text-muted">No Record Found...</h4>
+                                            </div>
+                                        </t>
+                                        <t t-else="">
+                                            <ChartRenderer type="'bar'" config="state.topPerformingSeller"/>
+                                        </t>
+                                    </div>
+                                </div>
+                            </t>
+                            
+                            <!-- TOP SELLING PRODUCTS -->
+                            <div class="col-lg-6 m-0 p-0">
+                                <div class="dashboard-card border m-2 px-2 bg-white rounded-3" id="top-products-chart">
+                                    <div class="d-md-flex flex-column flex-md-row align-items-center justify-content-between" style="padding:22px 12px;">
+                                        <h3 class="fw-bold">Top Selling Products</h3>
+                                        <div class="d-flex align-items-center" style="justify-content:end">
+                                            <p class="m-0 p-0" style="align-content:center">Total Results</p>
+                                            <div style="margin: 0px 16px;">
+                                                <select class="form-select mr-3 my-3 select-chart rounded border" id="products-count" t-on-change="handleProductsCountSelectChange" style="max-width: 150px; background-color: white !important">
+                                                    <option value="5" select="True">5</option>
+                                                    <option value="10">10</option>
+                                                    <option value="20">20</option>
+                                                    <option value="50">50</option>
+                                                    <option value="100">100</option>
+                                                </select>
+                                            </div>
+
+                                            <div style="margin-right: 16px;">
+                                                <select class="form-select mr-3 my-3 select-chart rounded border border-secondary" id="top-products" t-on-change="handleTopProductSelectChange">
+                                                    <option value="W" class="p-3" select="True">Weekly</option>
+                                                    <option value="M">Monthly</option>
+                                                    <option value="Y">Yearly</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <t t-if="state.noMpTopProductsData">
+                                        <div class="text-center p-4">
+                                            <h4 class="text-muted">No Record Found...</h4>
+                                        </div>
+                                    </t>
+                                    <t t-else="">
+                                        <div class="table-responsive scroll not-chart" style="margin:10px 0px">
+                                            <table class="table table-borderless">
+                                                <thead class="border-top border-bottom border-secondary">
+                                                    <tr>
+                                                        <th scope="col" class="fs-6 text-dark">Sr. No.</th>
+                                                        <th scope="col" class="fs-6 text-dark">Product Name</th>
+                                                        <t t-if="state.isAdmin">
+                                                            <th scope="col" class="fs-6 text-dark">Seller</th>
+                                                        </t>
+                                                        <th scope="col" class="fs-6 text-dark">Sold Quantity</th>
+                                                        <th scope="col" class="fs-6 text-dark">Total Sale</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody class="fw-bold" style="font-size:12px">
+                                                    <t t-foreach="state.topProducts" t-as="top_pro" t-key="top_pro_index">
+                                                        <tr>
+                                                            <td class="fs-6 text-muted">
+                                                                <t t-esc="top_pro_index+1"/>
+                                                            .
+                                                            </td>
+                                                            <td scope="row" class="fs-6 text-muted">
+                                                                <a href="#" t-on-click="() => this.openProductViewForm(top_pro[0])">
+                                                                    <t t-esc="top_pro[1]"/>
+                                                                </a>
+                                                            </td>
+                                                            <t t-if="state.isAdmin">
+                                                                <td class="fs-6 text-muted">
+                                                                    <t t-esc="top_pro[2]"/>
+                                                                </td>
+                                                            </t>
+                                                            <td class="fs-6 text-muted">
+                                                                <t t-esc="top_pro[3]"/>
+                                                            </td>
+                                                            <td class="fs-6 text-muted" style="display: flex; gap: 2px;">
+                                                                <span t-esc="state.currency"/>
+                                                                <span t-esc="top_pro[4]"/>
+                                                            </td>
+                                                        </tr>
+                                                    </t>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </t>
+                                </div>
+                            </div>
+
+                            <!-- SELLERS RATING -->
+                            <t t-if="state.isAdmin">
+                                <div class="col-lg-6 m-0 p-0">
+                                    <div id="chart_ratings" class="dashboard-card border m-2 p-4 bg-white rounded-3">
+                                        <div class="d-md-flex flex-column flex-md-row align-items-center justify-content-between">
+                                            <h3 class="flex-grow-1 fw-bold">Overall Seller Ratings</h3>
+                                            <div class="d-flex align-items-center mt-2 mt-md-0">
+                                                <div style="margin-right: 16px;">
+                                                    <select class="form-select mr-3 my-3 select-chart rounded border border-secondary" id="seller-ratings" t-on-change="handleRatingsSelectChange">
+                                                        <option value="W" class="p-3" select="True">Weekly</option>
+                                                        <option value="M">Monthly</option>
+                                                        <option value="Y">Yearly</option>
+                                                    </select>
+                                                </div>
+                                                <img src="odoo_marketplace/static/src/sales_dashboard/dashboard_icons/records.png" class="chart-view-icon" data-tooltip="View Marketplace Top Rated Sellers" id="chartRatings" t-on-click="() => this.openRatingsChart()"/>
+                                            </div>
+                                        </div>
+                                        <t t-if="state.noMpRatingsData">
+                                            <div class="text-center p-4">
+                                                <h4 class="text-muted">No Record Found...</h4>
+                                            </div>
+                                        </t>
+                                        <t t-else="">
+                                            <div class="scroll not-chart mt-3">
+                                                <div class="d-flex flex-column flex-md-row mx-0 mx-md-5" style="align-items:center">
+                                                    <!-- CIRCULAR PROGRESS GRAPH -->
+                                                    <div class="circular-progress-chart mt-3">
+                                                        <div class="progress" t-att-data-percentage="state.ratingPercentageValue" style="margin:0px">
+                                                            <span class="progress-left">
+                                                                <span class="progress-bar"></span>
+                                                            </span>
+                                                            <span class="progress-right">
+                                                                <span class="progress-bar"></span>
+                                                            </span>
+                                                            <div class="progress-value">
+                                                                <div>
+                                                                    <span style="font-size: 24px; font-weight:700">
+                                                                        <t t-out="state.averageRating"/>
+                                                                    </span>
+                                                                    <br/>
+                                                                    <span class="text-muted">
+                                                                        <t t-out="state.totalReviews"/>
+                                                        reviews</span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!-- HORIZONTAL BAR GRAPH -->
+                                                    <div class="px-md-5 me-4 d-flex horizontal-chart">
+                                                        <ChartRenderer type="'bar'" config="state.ratings"/>
+                                                        <ul class="p-0 px-md-3 mt-2" style="list-style-type:none">
+                                                            <t t-foreach="state.ratingValues" t-as="rating" t-key="rating_index">
+                                                                <li style="padding-top:4px" class="text-muted">
+                                                                    <t t-esc="rating"/>
+                                                                    <span class="mx-1">%</span>
+                                                                </li>
+                                                            </t>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                                <hr/>
+                                                <!-- SELLER WISE AVG RATINGS -->
+                                                <div class="top-sellers-reviews mx-0 mx-md-5">
+                                                    <ul class="p-0" list-style-type="circle">
+                                                        <t t-foreach="state.topSellerRatings" t-as="top_seller" t-key="top_seller_index">
+
+                                                            <li class="d-flex my-3 fw-bold">
+                                                                <a href="#" t-on-click="() => this.openPartnerViewForm(top_seller[0][0])">
+                                                                    <span>
+                                                                        <i class="fa fa-circle mx-3" style="color: rgb(35, 116, 143); font-size:8px"/>
+                                                                        <t t-esc="top_seller[0][1]"/>
+                                                                    </span>
+                                                                </a>
+                                                                <span class="ms-auto">
+                                                                    <t t-esc="top_seller[1]"/>
+                                                                    <i class="fa fa-star mx-1 rotating-star" style="color: rgb(247,192,73);"/>
+                                                                </span>
+                                                            </li>
+                                                        </t>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </t>
+
+                                    </div>
+                                </div>
+                            </t>
+
+                            <!-- BEST SELLING PRODUCT -> DOUGHNUT CHART -->
+
+                            <t t-else="">
+                                <div class="col-lg-6 m-0 p-0">
+                                    <div id="chart_best_prod" class="doughnut-scroll dashboard-card border m-2 p-4 bg-white rounded-3">
+                                        <div class="d-md-flex flex-column flex-md-row align-items-center justify-content-between my-md-3">
+                                            <h3 class="flex-grow-1 fw-bold">Best Selling Products</h3>
+                                            <div class="d-flex align-items-center mt-2 mt-md-0">
+                                                <p class="m-0 p-0 text-center">Total Results</p>
+                                                <div class="my-2 my-md-0" style="margin: 0px 16px;">
+                                                    <select class="form-select select-chart rounded border" id="best-selling-products-count" t-on-change="handleBestSellingProductsCountSelectChange" style="background-color: white !important">
+                                                        <option value="5" select="True">5</option>
+                                                        <option value="10">10</option>
+                                                        <option value="20">20</option>
+                                                        <option value="50">50</option>
+                                                        <option value="100">100</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="d-flex my-2 my-md-0">
+                                                <div style="margin-right: 16px;">
+                                                    <select class="form-select select-chart rounded border border-secondary" id="best-selling" t-on-change="handleBestSellingSelectChange">
+                                                        <option value="W" class="p-3" select="True">Weekly</option>
+                                                        <option value="M">Monthly</option>
+                                                        <option value="Y">Yearly</option>
+                                                    </select>
+                                                </div>
+                                                <input type="hidden" name="best_selling_prod_ids" t-att-value="state.best_selling_prod_ids"/>
+                                                <img src="odoo_marketplace/static/src/sales_dashboard/dashboard_icons/records.png" class="chart-view-icon m-0" data-tooltip="View Best selling products" id="chartBestProducts" t-on-click="() => this.openBestProductsChart()"/>
+                                            </div>
+                                        </div>
+                                        <t t-if="state.noMpBestProdSellersData">
+                                            <div class="text-center p-4">
+                                                <h4 class="text-muted">No Record Found...</h4>
+                                            </div>
+                                        </t>
+                                        <t t-else="">
+                                            <div class="d-flex justify-content-center">
+                                                <ChartRenderer type="'doughnut'" config="state.best_selling"/>
+                                            </div>
+                                        </t>
+                                    </div>
+                                </div>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="dashboard_footer">
+            </div>
+        </div>
+
+
+    </t>
+</templates>

@@ -1,0 +1,36 @@
+<?xml version="1.0" ?>
+<!-- Copyright (c) 2016-Present Webkul Software Pvt. Ltd. (<https://webkul.com/>) -->
+<!-- See LICENSE file for full copyright and licensing details. -->
+<!-- License URL : https://store.webkul.com/license.html/ -->
+
+<odoo>
+    <data noupdate="1">
+        <!--Email template for seller_product_approval-->
+        <record id="marketplace_template_for_product_status_changeto_admin" model="mail.template">
+            <field name="name">Seller Product Approval Request Mail To Admin</field>
+            <field name="email_from">{{ (object.marketplace_seller_id.email or '') }}</field>
+            <field name="subject">New Product Approval Request From Seller</field>
+            <field name="email_to">{{ (object.sudo().marketplace_seller_id.company_id.email or ctx.get('company') and ctx.get('company').email or '') }}</field>
+            <field name="model_id" ref="odoo_marketplace.model_product_template"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="lang">{{object.marketplace_seller_id.lang}}</field>
+            <field name="body_html" type="html">
+                <div style="font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; ">
+                    <p>Dear <t t-out="object.marketplace_seller_id.company_id and object.sudo().marketplace_seller_id.company_id.partner_id.name or ctx.get('company') and ctx.get('company').sudo().partner_id.name"/>,</p>
+                    <p>We are pleased to inform you that Seller <t t-out="object.marketplace_seller_id.name"/> has submitted a request for new product "<t t-out="object.name"/>" for approval on your shop.</p>
+                    <p><b>Details:</b></p>
+                    <ul>
+                        <li><b>Seller Name: </b><t t-out="object.marketplace_seller_id.name"/></li>
+                        <li><b>Product Name: </b><t t-out="object.name"/></li>
+                    </ul>
+                    <t t-set="action_id" t-value="str(ctx.get('action_id'))"/>
+                    <t t-set="share_link" t-value="'/web#action='+action_id+'&amp;model='+object._name+'&amp;id='+str(object.id)+'&amp;view_type=form'" /><br/>
+                    <a t-attf-href="#{share_link}" style="background-color: #875A7B; padding: 10px; text-decoration: none; color: #fff; border-radius: 5px; font-size: 12px;"><strong>View Product Details</strong></a><br/><br/>
+                    <p>Please click the button above to view the product details and take appropriate action accordingly.</p>
+                    <p>Best regards,</p>
+                    <t t-out="object.marketplace_seller_id.company_id and object.sudo().marketplace_seller_id.company_id.partner_id.name or ctx.get('company') and ctx.get('company').sudo().partner_id.name"/>
+                </div>
+            </field>
+        </record>
+    </data>
+</odoo>

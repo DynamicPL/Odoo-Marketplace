@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2016-Present Webkul Software Pvt. Ltd. (<https://webkul.com/>) -->
+<!-- See LICENSE file for full copyright and licensing details. -->
+<!-- License URL : https://store.webkul.com/license.html/ -->
+
+<odoo>
+    <data>
+        <record id="wk_seller_payment_wizard_form_view" model="ir.ui.view">
+            <field name="name">seller.payment.form</field>
+            <field name="model">seller.payment.wizard</field>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <form string="Seller Payment Request">
+                    <group>
+                        <field name="seller_id" required="1" groups="odoo_marketplace.marketplace_manager_group"/>
+                        <field name="seller_id" invisible="1" groups="!odoo_marketplace.marketplace_manager_group"/>
+                        <!-- <field name="cashable_amount" string="Cashable Amount" widget="monetary"/> -->
+                        <label for="amount" string="Requested Payment Amount"/>
+                        <div>
+                            <field name="amount" string="Requested Payment Amount" widget="monetary" class="oe_inline"/>
+                            <span></span>
+                        </div>
+                        <field name="currency_id" invisible="1"/>
+                        <field name="description" required="1" placeholder="Payment description"/>
+                        <field name="has_pending_debit" invisible="1"/>
+                    </group>
+                    <div invisible="not credit_payment_ids">
+                        <separator string="Seller Credit Payments"/>
+                        <field name="credit_payment_ids" nolabel="1">
+                            <tree string="Seller Payments" create="0" delete="0">
+                                <field name="name"/>
+                                <field name="seller_id" groups="odoo_marketplace.marketplace_officer_group"/>
+                                <field name="memo"/>
+                                <field name="payment_type" widget="badge" decoration-danger="payment_type=='dr'" decoration-success="payment_type=='cr'"/>
+                                <field name="invoice_currency_id" colums_invisible="True"/>
+                                <field name="payable_amount" sum="Total Payable Amount" widget="monetary" options="{'currency_field': 'invoice_currency_id'}"/>
+                                <field name="payment_mode"/>
+                                <field name="state" widget="badge" decoration-info="state=='draft'" decoration-warning="state=='requested'" decoration-success="state=='confirm'" decoration-muted="state=='posted'" decoration-danger="state=='canceled'"/>
+                            </tree>
+                        </field>
+                    </div>
+                    <div class="alert alert-warning" role="alert" invisible="not has_pending_debit">
+                        <b>Note:</b> You currently have a few pending payment request.
+                    </div>
+                    <footer>
+                        <button string="Payment Request" name="do_request" type="object" class="btn-primary" context="{'by_seller': True}"/>
+                         or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="wk_pay_to_seller_payment_wizard_form_view" model="ir.ui.view">
+            <field name="name">Pay.to.seller.payment.form</field>
+            <field name="model">seller.payment.wizard</field>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <form string="Seller Payment Request">
+                    <group>
+                        <field name="date" required="1"/>
+                        <field name="currency_id" invisible="1"/>
+                        <field name="seller_id" required="1" options='{"no_open": True, "no_create": True}' placeholder="Seller"/>
+                        <!-- <field name="cashable_amount" string="Cashable Amount" invisible="seller_id == False" help="You can pay to seller upto this amount." widget="monetary"/> -->
+                        <field name="cashable_amount" invisible="1" />
+                        <label for="amount" string="Payment Amount" invisible = 'seller_id == False'/>
+                        <div invisible = 'seller_id == False'>
+                            <field name="amount" string="Payment Amount" help="Amount which you are paying to seller." widget="monetary" class="oe_inline"/>
+                            <span></span>
+                        </div>
+                        <field name="payment_method_id" invisible = "seller_id == False" required="1" options='{"no_open": True, "no_create": True}' placeholder="Payment Method" help="Select payment method in which you have paid payment to seller."/>
+                        <field name="memo" invisible = "seller_id == False" required="1" placeholder="Memo" help="Mention payment reference like: Cheque number, Bank Transaction number etc."/>
+                        <field name="description" invisible = "seller_id == False" required="1" placeholder="Payment description"/>
+                        <field name="has_pending_debit" invisible="1"/>
+                    </group>
+                    <div invisible="seller_id == False or not credit_payment_ids">
+                        <separator string="Seller Credit Payments"/>
+                        <field name="credit_payment_ids" nolabel="1">
+                            <tree string="Seller Payments" create="0" delete="0">
+                                <field name="name"/>
+                                <field name="seller_id" groups="odoo_marketplace.marketplace_officer_group"/>
+                                <field name="memo"/>
+                                <field name="payment_type" widget="badge" decoration-danger="payment_type=='dr'" decoration-success="payment_type=='cr'"/>
+                                <field name="currency_id" column_invisible="True"/>
+                                <field name="payable_amount" sum="Total Payable Amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                <field name="payment_mode"/>
+                                <field name="state" widget="badge" decoration-info="state=='draft'" decoration-warning="state=='requested'" decoration-success="state=='confirm'" decoration-muted="state=='posted'" decoration-danger="state=='canceled'"/>
+                            </tree>
+                        </field>
+                    </div>
+                    <div class="alert alert-warning" role="alert" invisible="not has_pending_debit">
+                        <b>Note:</b> This seller currently have a few pending payment request.
+                    </div>
+                    <div class="fa fa-exclamation-triangle label-warning" invisible="cashable_amount != 0.0 or seller_id == False" style="padding: 10px 10px 0px 10px;border-radius: 10px;">
+                        <b>
+                            <p style="padding:2px; display: inline-block;">
+                                Sorry, Seller has no cashable amount. So you can't pay to this seller.
+                            </p>
+                        </b>
+                    </div>
+                    <footer>
+                        <button string="Pay Now" name="do_request" type="object" class="btn-primary" invisible = "cashable_amount == 0.0"/>
+                        <span invisible = "cashable_amount == 0.0"> or </span>
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="wk_seller_payment_wizard_action" model="ir.actions.act_window">
+            <field name="name">Payment Request</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">seller.payment.wizard</field>
+            <field name="binding_view_types">form</field>
+            <field name="target">new</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="wk_seller_payment_wizard_form_view"/>
+        </record>
+
+        <record id="wk_pay_to_seller_payment_wizard_action" model="ir.actions.act_window">
+            <field name="name">Pay to Seller</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">seller.payment.wizard</field>
+            <field name="binding_view_types">form</field>
+            <field name="target">new</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="wk_pay_to_seller_payment_wizard_form_view"/>
+        </record>
+    </data>
+</odoo>

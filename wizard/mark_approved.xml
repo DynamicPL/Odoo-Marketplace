@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2016-Present Webkul Software Pvt. Ltd. (<https://webkul.com/>) -->
+<!-- See LICENSE file for full copyright and licensing details. -->
+<!-- License URL : https://store.webkul.com/license.html/ -->
+
+
+<odoo>
+    <data>
+      <record id="massconfirm_details_form_view" model="ir.ui.view">
+          <field name="name">Marketplace Server Action Order Wizard. </field>
+          <field name="model">mass.action.details</field>
+          <field name="type">form</field>
+          <field name="arch" type="xml">
+              <form>
+                  <field name="sale_order_line_ids">
+                      <tree create="false">
+                          <field name="order_id" string="Order"  readonly="1"/>
+                          <field name="product_id"  readonly="1"/>
+                          <field name="marketplace_seller_id" string="Sold By"  readonly="1"/>
+                          <field name="order_partner_id"  readonly="1"/>
+                          <field name="product_uom_qty"  readonly="1"/>
+                          <field name="currency_id" column_invisible="True"/>
+                          <field name="price_subtotal" sum="Total" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                          <field name="marketplace_state" string="Marketplace Status" widget="label_selection" options="{'classes': {'new': 'info', 'cancel': 'danger', 'pending': 'warning', 'shipping': 'primary', 'approved': 'success', 'done': 'secondary'}}" readonly="1"/>
+
+                      </tree>
+                  </field>
+                  <div class="fa fa-exclamation-triangle label-warning "  style="padding: 5px 5px 0px 5px;border-radius: 10px;">
+                      <b>
+                          <p style="padding:2px; display: inline-block;"> Only <i style="color:red">pending </i>  will be mass approved.</p>
+                      </b>
+                  </div>
+                  <footer>
+                      <button name="confirm_all" type="object" string="Approve"  class="btn-primary"/>
+                      <button string="Cancel" class="" special="cancel" />
+
+                  </footer>
+              </form>
+          </field>
+      </record>
+
+      <record model="ir.actions.server" id="mp_product_massconfirm_action_wizard">
+          <field name="name">Mark Approved</field>
+          <field name="type">ir.actions.server</field>
+          <field name="state">code</field>
+          <field name="model_id" ref="model_sale_order_line"/>
+          <field name="binding_model_id" ref="model_sale_order_line"/>
+          <field name="binding_view_types">list</field>
+          <field name="code">
+              action = records.get_approved_wizard_action()
+          </field>
+      </record>
+
+
+</data>
+</odoo>

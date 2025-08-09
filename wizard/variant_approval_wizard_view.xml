@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright (c) 2016-Present Webkul Software Pvt. Ltd. (<https://webkul.com/>) -->
+<!-- See LICENSE file for full copyright and licensing details. -->
+<!-- License URL : https://store.webkul.com/license.html/ -->
+
+<odoo>
+	<data>
+        <record id="wk_product_variant_wizard_view" model="ir.ui.view">
+            <field name="name">product.variant.wizard.view</field>
+            <field name="model">variant.approval.wizard</field>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <form string="Product Variant Approval" create="0">
+                    <div>
+                        <field name="product_id" invisible="1"/>
+                        <field name="variant_ids" domain="[('product_tmpl_id','=',product_id)]">
+                            <tree create="0" editable="bottom">
+                                <field name="name" readonly="1"/>
+                                <field name="product_template_attribute_value_ids" widget="many2many_tags" readonly="1"/>
+                                <field name="marketplace_status" string="Status" widget="badge" decoration-info="marketplace_status == 'draft'" decoration-warning="marketplace_status == 'pending'" decoration-success="marketplace_status == 'approved'" decoration-danger="marketplace_status == 'rejected'" readonly="1"/>
+                            </tree>
+                        </field>
+                        <div class="alert alert-success" role="alert">
+                            <b>Note:</b> Please remove the product variants if you prefer not to include them for approval!
+                        </div>
+                    </div>
+                    <footer>
+                        <button name="approve_selected_variant" type="object" string="Approve" class="oe_highlight"/>
+                        <button special="cancel" string="Cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

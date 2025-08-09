@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2016-Present Webkul Software Pvt. Ltd. (<https://webkul.com/>) -->
+<!-- See LICENSE file for full copyright and licensing details. -->
+<!-- License URL : https://store.webkul.com/license.html/ -->
+
+<odoo>
+    <data>
+        <record id="seller_invoice_action" model="ir.actions.act_window">
+            <field name="name">Seller Invoices</field>
+            <field name="res_model">account.move</field>
+            <field name="binding_view_types">form</field>
+            <field name="view_mode">tree,form</field>
+            <field eval="False" name="view_id"/>
+            <field name="domain">[('move_type','in',['in_invoice','in_refund']),('is_seller','!=',False),'|',('seller_payment_ids','!=',False),('mp_seller_bill','=',True)]</field>
+            <field name="context">{'default_move_type': 'in_invoice', 'move_type': 'in_invoice', 'journal_type': 'purchase', 'is_seller':True, 'default_mp_seller_bill':True}</field>
+            <field name="view_id" ref="account.view_account_invoice_filter"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a new Seller invoice.
+              </p><p>
+                You can control the invoice for your Seller according to
+                what you sale.
+              </p>
+            </field>
+        </record>
+
+        <record id="seller_invoice_tree_view_action" model="ir.actions.act_window.view">
+            <field name="view_mode">tree</field>
+            <field name="act_window_id" ref="odoo_marketplace.seller_invoice_action"/>
+        </record>
+
+        <record id="action_seller_payments_payable" model="ir.actions.act_window">
+            <field name="name">Payments</field>
+            <field name="res_model">account.payment</field>
+            <field name="binding_view_types">form</field>
+            <field name="view_mode">tree,form,graph</field>
+            <field name="context">{'default_payment_type': 'outbound'}</field>
+            <field name="domain">[('is_seller_payment', '=', True)]</field>
+            <field name="view_id" ref="account.view_account_supplier_payment_tree"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                  Click to register a payment
+                </p><p>
+                  Payments are used to register liquidity movements (send, collect or transfer money).
+                  You can then process those payments by your own means or by using installed facilities.
+                </p>
+            </field>
+        </record>
+
+      <record model="ir.ui.view" id="mp_view_quant_package_form">
+        <field name="name">mp.stock.quant.package.form</field>
+        <field name="model">stock.quant.package</field>
+        <field eval="10" name="priority"/>
+        <field name="arch" type="xml">
+            <form string="Package">
+                <!-- <header>
+                    <button name="unpack" string="Unpack" type="object"/>
+                </header> -->
+                <sheet>
+                    <!-- <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" name="action_view_picking"
+                        string="Package Transfers" type="object"
+                        widget="statinfo" icon="oi-arrows-v"/>
+                    </div> -->
+                    <div class="oe_title">
+                        <label for="name" string="Package Reference"/>
+                        <h1><field name="name" class="oe_inline" placeholder="e.g. PACK0000007"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="package_type_id" options="{'no_create': True,'no_open':True}"/>
+                            <field name='company_id' groups="base.group_multi_company"/>
+                            <field name='owner_id' groups="stock.group_tracking_owner"/>
+                            <field name="location_id" options="{'no_create': True,'no_open':True}"/>
+                        </group>
+                        <group>
+                            <field name="pack_date"/>
+                            <field name="marketplace_seller_id" string="Marketplace Seller" readonly="1" options="{'no_open':True}"/>
+                        </group>
+                    </group>
+                    <separator string="Content"/>
+                    <field name="quant_ids">
+                        <tree>
+                            <field name="product_id"/>
+                            <field name="lot_id" groups="stock.group_production_lot"/>
+                            <field name="quantity"/>
+                            <field name="product_uom_id" groups="uom.group_uom"/>
+                        </tree>
+                    </field>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="mp_action_package_view_seller">
+        <field name="context">{}</field>
+        <field name="name">Packages</field>
+        <field name="res_model">stock.quant.package</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="view_id" ref="mp_view_quant_package_form"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new package
+            </p><p>
+                Packages are usually created via transfers (during pack operation) and can contain different products.
+                Once created, the whole package can be moved at once, or products can be unpacked and moved as single units again.
+            </p>
+        </field>
+    </record>
+
+    </data>
+</odoo>

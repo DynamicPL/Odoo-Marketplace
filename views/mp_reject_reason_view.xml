@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2016-Present Webkul Software Pvt. Ltd. (<https://webkul.com/>) -->
+<!-- See LICENSE file for full copyright and licensing details. -->
+<!-- License URL : https://store.webkul.com/license.html/ -->
+
+<odoo>
+    <data>
+        <record id="wk_reject_reason_tree_view" model="ir.ui.view">
+            <field name="name">Marketplace Reject Reason</field>
+            <field name="model">marketplace.reject.reason</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="reason_type"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="wk_reject_reason_form_view" model="ir.ui.view">
+            <field name="name">Marketplace Reject Reason</field>
+            <field name="model">marketplace.reject.reason</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name" required="1"/>
+                                <field name="reason_type" required="1"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="wk_reject_reason_action" model="ir.actions.act_window">
+            <field name="name">Marketplace Reject Reason</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">marketplace.reject.reason</field>
+            <field name="binding_view_types">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to add social media for your marketplace sellers.
+                </p>
+            </field>
+        </record>
+    </data>
+</odoo>

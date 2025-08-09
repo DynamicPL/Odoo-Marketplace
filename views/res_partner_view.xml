@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2016-Present Webkul Software Pvt. Ltd. (<https://webkul.com/>) -->
+<!-- See LICENSE file for full copyright and licensing details. -->
+<!-- License URL : https://store.webkul.com/license.html/ -->
+
+<odoo>
+    <data>
+        <record id="add_seller_in_res_partner_formview" model="ir.ui.view">
+            <field name="name">Partner.As.Seller</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <page name="sales_purchases" position="inside">
+                    <field name="customer_rank" invisible="1"/>
+                    <group>
+                        <group col="4" groups="odoo_marketplace.marketplace_manager_group">
+                            <separator string="Marketplace" colspan="4"/>
+                            <field name="seller" readonly="1" colspan="2"/>
+                            <button colspan="2" name="register_partner_as_a_seller" class="btn btn-xs oe_highlight" type="object" string="Register as Seller" invisible = "seller == True"/>
+                        </group>
+                    </group>
+                </page>
+            </field>
+        </record>
+
+        <record id="customer_form_view_for_marketplace" model="ir.ui.view">
+            <field name="name">Marketplace Customer</field>
+            <field name="model">res.partner</field>
+            <field name="arch" type="xml">
+              <form string="Marketplace Customer" edit="0" create="0" delete="0">
+                 <sheet>
+                     <field name="image_1920" widget="image" class="oe_avatar" options="{&quot;preview_image&quot;: &quot;image_medium&quot;, &quot;size&quot;: [90, 90]}"/>
+                     <div class="oe_title">
+                         <field name="is_company" invisible="1"/>
+                         <field name="parent_id" invisible="1"/>
+                         <field name="type" invisible="1"/>
+                        <h1>
+                            <field name="name" default_focus="1" placeholder="Name" required = "type == 'contact'"/>
+                        </h1>
+                     </div>
+                     <group>
+                         <group>
+                             <label for="street" string="Address"/>
+                             <div class="o_address_format">
+                                 <field name="street" placeholder="Street..." class="o_address_street" readonly = "type == 'contact' or parent_id != False"/>
+                                 <field name="street2" placeholder="Street 2..." class="o_address_street" readonly = "type == 'contact' or parent_id != False"/>
+                                 <field name="city" placeholder="City" class="o_address_city" readonly = "type == 'contact' or parent_id != False"/>
+                                 <field name="state_id" class="o_address_state" placeholder="State" options="{&quot;no_open&quot;: True}" readonly = "type == 'contact' or parent_id != False" context="{'country_id': country_id, 'zip': zip}"/>
+                                 <field name="zip" placeholder="ZIP" class="o_address_zip" readonly = "type == 'contact' or parent_id != False"/>
+                                 <field name="country_id" placeholder="Country" class="o_address_country" options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}" readonly = "type == 'contact' or parent_id != False"/>
+                             </div>
+                             <field name="vat" placeholder="e.g. BE0477472701"/>
+                        </group>
+                        <group>
+                            <field name="function" placeholder="e.g. Sales Director" invisible = "is_company == True"/>
+                            <field name="phone" widget="phone"/>
+                            <field name="mobile" widget="phone"/>
+                            <field name="user_ids" invisible="1"/>
+                            <field name="email" widget="email" context="{'gravatar_image': True}" required = "user_ids != []"/>
+                            <field name="website" widget="url" placeholder="e.g. www.odoo.com"/>
+                            <field name="title" options="{&quot;no_open&quot;: True}" invisible = "is_company == True"/>
+                            <field name="lang"/>
+                        </group>
+                     </group>
+                 </sheet>
+               </form>
+            </field>
+        </record>
+    </data>
+</odoo>

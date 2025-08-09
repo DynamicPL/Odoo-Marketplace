@@ -1,0 +1,415 @@
+@import url('https://fonts.googleapis.com/css?family=Lato:400,500,600,700&display=swap');
+
+.dashboard-card {
+  border-radius: 8px !important;
+
+  .dashboard-card-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    font-size: 34px;
+    font-weight: 600;
+
+    p {
+      font-size: 16px;
+      font-weight: 500;
+      line-height: 24px;
+      text-align: left;
+    }
+  }
+}
+
+@media (max-width: 576px) {
+
+  .dashboard-card-body {
+    flex-direction: row;
+    font-size: 24px !important;
+
+    p {
+      line-height: 20px;
+    }
+  }
+
+  .dashboard-card {
+    img {
+      max-width: 70px;
+      height: auto;
+    }
+  }
+
+  #chartBestProducts {
+    height: 30px;
+    margin-top: 10px;
+  }
+
+  #dashboard-content {
+    padding-bottom: 110px !important;
+  }
+}
+
+.not-chart {
+  height: 400px;
+}
+
+.main-card:hover {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transform: scale(1.01);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+#mp_analytics_canvas{
+  max-height: 460px !important;
+}
+
+#custom_dates {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  padding: 10px;
+
+  .startDate,
+  .endDate {
+    display: flex;
+    flex-direction: column;
+
+    label {
+      margin-bottom: 5px;
+    }
+  }
+
+  .check_date {
+    border-radius: 8px !important;
+    padding: 5px;
+    border: 2px solid;
+  }
+}
+
+#applyFilter {
+  cursor: pointer;
+  color: white;
+  font-weight: 700;
+  transition: all 0.2s;
+  padding: 2px 20px;
+  border-radius: 100px;
+  background: #17a2b8;
+  border: 1px solid transparent;
+  display: flex;
+  align-items: center;
+  font-size: 15px;
+}
+
+#applyFilter:hover {
+  background: #17a2b8;
+}
+
+#applyFilter>svg {
+  width: 20px;
+  margin-left: 10px;
+  transition: transform 0.3s ease-in-out;
+}
+
+#applyFilter:hover svg {
+  transform: translateX(5px);
+}
+
+#applyFilter:active {
+  transform: scale(0.95);
+}
+
+.scroll {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.doughnut-scroll{
+  max-height: 530px;
+  overflow-y: auto;
+}
+
+#period,
+.select-chart {
+  border-radius: 8px !important;
+  background-color: #e9eaeb !important;
+}
+
+#card_total_orders,
+#card_total_orders * {
+  background-color: #dff1fd !important;
+  border-color: #62befc !important;
+}
+
+#card_total_products,
+#card_total_products * {
+  background-color: #dbfbe6 !important;
+  border-color: #67fc9b !important;
+}
+
+#card_total_sales,
+#card_total_sales * {
+  background-color: #fde1e1 !important;
+  border-color: #f56060 !important;
+}
+
+#card_total_comm,
+#card_total_comm * {
+  background-color: #fdf2c6 !important;
+  border-color: #f7d962 !important;
+}
+
+#chart_sales, #chart_active_sellers, #chart_orders, #chart_top_sellers, #top-products-chart, #chart_ratings, #chart_best_prod {
+  min-height: 97%;
+}
+
+$table-max-height: 300px;
+
+.mp_content {
+  .mp_table {
+    border: 1px solid $secondary;
+
+    table,
+    th,
+    td {
+      border: 1px solid $secondary;
+      padding: 0.5rem;
+    }
+  }
+}
+
+.chart-arrow {
+  margin-right: 8px;
+}
+
+.horizontal-chart {
+  max-height: 150px;
+  max-width: 70%;
+}
+
+// CIRCULAR PROGRESS BAR 
+$borderWidth: 12px;
+$animationTime: .5s;
+$border-color-default: #efefef;
+$border-color-fill: #17a2b8;
+$size: 120px;
+$howManySteps: 100;
+
+.progress {
+  width: $size;
+  height: $size;
+  line-height: $size;
+  background: none;
+  margin: 0 auto;
+  box-shadow: none;
+  position: relative;
+
+  &:after {
+    content: "";
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: $borderWidth solid $border-color-default;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+
+  >span {
+    width: 50%;
+    height: 100%;
+    overflow: hidden;
+    position: absolute;
+    top: 0;
+    z-index: 1;
+  }
+
+  .progress-left {
+    left: 0;
+  }
+
+  .progress-bar {
+    width: 100%;
+    height: 100%;
+    background: none;
+    border-width: $borderWidth;
+    border-style: solid;
+    position: absolute;
+    top: 0;
+    border-color: $border-color-fill;
+  }
+
+  .progress-left .progress-bar {
+    left: 100%;
+    border-top-right-radius: ($size/2);
+    ;
+    border-bottom-right-radius: ($size/2);
+    ;
+    border-left: 0;
+    -webkit-transform-origin: center left;
+    transform-origin: center left;
+  }
+
+  .progress-right {
+    right: 0;
+
+    .progress-bar {
+      left: -100%;
+      border-top-left-radius: ($size/2);
+      border-bottom-left-radius: ($size/2);
+      border-right: 0;
+      -webkit-transform-origin: center right;
+      transform-origin: center right;
+    }
+  }
+
+  .progress-value {
+    display: flex;
+    border-radius: 50%;
+    font-size: 1rem;
+    text-align: center;
+    line-height: 20px;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+    font-weight: 300;
+  }
+}
+
+/* This for loop creates the necessary css animation names 
+Due to the split circle of progress-left and progress right, we must use the animations on each side. 
+*/
+@for $i from 1 through $howManySteps {
+  $stepName: (
+    $i*(100 / $howManySteps)
+  );
+
+//animation only the left side if below 50%
+@if $i <=($howManySteps/2) {
+  .progress[data-percentage="#{$stepName}"] {
+    .progress-right .progress-bar {
+      animation: loading-#{$i} $animationTime linear forwards;
+    }
+
+    .progress-left .progress-bar {
+      animation: 0;
+    }
+  }
+}
+
+//animation only the right side if above 50%
+@if $i >($howManySteps/2) {
+  .progress[data-percentage="#{$stepName}"] {
+    .progress-right .progress-bar {
+      animation: loading-#{($howManySteps/2)} $animationTime linear forwards; //set the animation to longest animation
+    }
+
+    .progress-left .progress-bar {
+      animation: loading-#{$i - ($howManySteps/2)} $animationTime linear forwards $animationTime;
+    }
+  }
+}
+}
+
+//animation
+@for $i from 1 through ($howManySteps/2) {
+  $degrees: (
+    180/($howManySteps/2)
+  );
+$degrees: (
+  $degrees*$i
+);
+
+@keyframes loading-#{$i} {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+
+  100% {
+    -webkit-transform: rotate($degrees);
+    transform: rotate(#{$degrees}deg);
+  }
+}
+}
+
+.sales-wrapper,
+.sellers-wrapper {
+  display: inline-flex;
+  background: #fff;
+  align-items: center;
+  justify-content: space-evenly;
+  border-radius: 5px;
+  padding: 20px 15px;
+}
+
+.sales-wrapper .sales-graph,
+.sellers-wrapper .sellers-graph {
+  background-color: #e9eaeb !important;
+  font-weight: 500;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  cursor: pointer;
+  padding: 6px;
+  transition: all 0.3s ease;
+}
+
+input[type="radio"].sales-options,
+input[type="radio"].sellers-options {
+  display: none;
+}
+
+#sales-graph-1:checked~.sales-graph-1,
+#sales-graph-2:checked~.sales-graph-2,
+#sellers-graph-1:checked~.sellers-graph-1,
+#sellers-graph-2:checked~.sellers-graph-2 {
+  border-color: #17a2b8;
+  background: #17a2b8 !important;
+  border-radius: inherit;
+}
+
+#sales-graph-1:checked~.sales-graph-1 img,
+#sales-graph-2:checked~.sales-graph-2 img,
+#sellers-graph-1:checked~.sellers-graph-1 img,
+#sellers-graph-2:checked~.sellers-graph-2 img {
+  filter: brightness(0) saturate(100%) invert(100%) sepia(0%) saturate(0%) hue-rotate(0deg);
+}
+
+.chart-view-icon {
+  cursor: pointer;
+
+  &:active {
+    transform: scale(0.95);
+  }
+}
+
+@keyframes rotateStar {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+.rotating-star {
+  animation: rotateStar 3s linear infinite;
+}
+
+#dashboard_footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: #f1f1f1;
+  padding: 6px;
+  text-align: center;
+  z-index: 1000;
+}
+
+#dashboard-content {
+  padding-bottom: 60px;
+}

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="mp_sales_dashboard" model="ir.actions.client">
+            <field name="name">Marketplace Sales Dashboard</field>
+            <field name="tag">mp_analytics_dashboard_tag</field>
+            <field name="target">main</field>
+        </record>
+
+        <menuitem id="wk_seller_dashboard_menu102" parent="wk_seller_dashboard_menu10" name="Analytics Dashboard" action="mp_sales_dashboard" groups="odoo_marketplace.marketplace_seller_group"  sequence="1"/>
+
+
+    </data>
+    
+
+</odoo>

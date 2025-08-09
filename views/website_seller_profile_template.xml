@@ -1,0 +1,1027 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2016-Present Webkul Software Pvt. Ltd. (<https://webkul.com/>) -->
+<!-- See LICENSE file for full copyright and licensing details. -->
+<!-- License URL : https://store.webkul.com/license.html/ -->
+
+<odoo>
+	<data noupdate="0">
+
+        <template id="mp_seller_profile" name="Seller Profile">
+			<t t-call="website.layout">
+				<div class="oe_structure"/>
+				<div id="wrap">
+					<t t-set="avg_val" t-value="seller.avg_review()"/>
+					<t t-set="total_reviews" t-value="len(seller.fetch_active_review(seller.id))"/>
+					<div class="carousel-inner-parent">
+						<div class="carousel-inner">
+							<t t-set="seller_profile_banner" t-value="seller.sudo().profile_banner"/>
+							<t t-if="seller_profile_banner">
+								<div class="mp_profile_banner_bg carousel-item oe_img_bg oe_custom_bg active" t-attf-style="background-image: url('/web/image/res.partner/#{seller.id}/profile_banner');width: 100%;height: 320px;background-size:100% 320px;"></div>
+							</t>
+							<t t-if="not seller_profile_banner">
+								<div class="mp_profile_banner_bg carousel-item oe_img_bg oe_custom_bg active" t-attf-style="background-image: url('/odoo_marketplace/static/src/img/dummy-banner.png');width: 100%;height: 320px; background-size:100% 320px;"></div>
+							</t>
+						</div>
+					</div>
+					<div class='container'>
+						<div class="row mp_seller_desc" id="" style="border:1px solid #e3e3e3;padding-top:15px;padding-bottom:15px;">
+							<div class="row">
+								<div class="col-md-4 col-lg-3 hidden-xs hidden-sm mp_seller_desc_profile">
+									<div class="item oe_img_bg oe_custom_bg seller-profile-pic" t-attf-style="background-image: url('/web/image/res.partner/#{seller.id}/profile_image');background-size:180px;"></div>
+								</div>
+								<div class="col-md-6 col-lg-5" id="seller_name_and_rating">
+									<div class="row ml0 mr0 d-none d-md-block">
+										<p style="font-size:20px;" class="ps-4 mb-0" title="Seller Name">
+											<b><t t-out="seller.name"/></b>
+										</p>
+										<t t-set="seller_add_state" t-value="seller.state_id"/>
+										<t t-set="seller_add_country" t-value="seller.country_id"/>
+										<t t-if="seller_add_state and seller_add_country">
+											<div class="fa fa-map-marker" style="color:#656565;margin-left:15px;margin-top: 10px;" title="Seller Address">
+												<span><t t-out="seller_add_state.name"/>,
+													<t t-out="seller_add_country.name"/></span>
+											</div>
+										</t>
+									</div>
+                                    <div class="row ml0 mr0 d-block d-md-none d-lg-none seller_address_div" style="position: relative;">
+                                        <span style="font-size:20px;" title="Seller Name">
+											<b><t t-out="seller.name"/></b>
+										</span>
+										<t t-set="seller_add_state" t-value="seller.state_id"/>
+										<t t-set="seller_add_country" t-value="seller.country_id"/>
+										<t t-if="seller_add_state and seller_add_country">
+											<div class="fa fa-map-marker" style="color:#656565;margin-left:15px;margin-top: 10px;" title="Seller Address">
+												<span><t t-out="seller_add_state.name"/>,
+													<t t-out="seller_add_country.name"/></span>
+											</div>
+										</t>
+                                    </div>
+									<div class="row ml0 mr0">
+										<t t-if="website.mp_seller_review">
+											<a href="#rating_review_tab" id="open-review-tab">
+												<span class="" style="display:inline-flex;">
+													<input
+														id="star-readonly"
+														class="rating form-control d-none"
+														t-attf-value="#{avg_val}"
+														data-show-clear="false"
+														data-show-caption="false"
+														data-min="0"
+														data-max="5"
+														data-step="0.1"
+														data-readonly="true"
+														data-size="xs"
+														data-symbol="&#xf005;"
+														data-glyphicon="false"
+														data-rating-class="rating-fa"/>
+													<span style="padding: 7px;">
+														(<t t-out="total_reviews"/>
+														<t t-if="total_reviews&gt;1">
+															Reviews</t>
+														<t t-if="total_reviews &lt; 2">
+															Review</t>)</span>
+												</span>
+											</a>
+										</t>
+									</div>
+								</div>
+								<div class="" id="vacant_div"/>
+							</div>
+							<div class="row">
+								<div class="col-md-12" style="color:#656565;">
+									<span class="mp_wrap_content" t-out="seller.profile_msg"/>
+								</div>
+							</div>
+							<t t-set="mp_seller_shop_id" t-value="seller.sudo().seller_shop_id"/>
+							<div class="d-flex flex-row" style="">
+								<t t-if="website.mp_product_count">
+									<span class="badge bg-secondary rounded-pill fa fa-tags" aria-label="badge" style="padding:5px 10px;">
+										<![CDATA[&nbsp;&nbsp;&nbsp;&nbsp;]]><t t-out="seller.seller_products_count()"/>
+										<![CDATA[&nbsp;]]>Products</span>
+								</t>
+								<t t-if="website.mp_sale_count">
+									<span class="badge bg-secondary rounded-pill fa fa-line-chart ms-1" aria-label="badge" style="padding:5px 10px;">
+										<![CDATA[&nbsp;&nbsp;&nbsp;&nbsp;]]><t t-out="sales_count"/>
+										<![CDATA[&nbsp;]]>Sales</span>
+								</t>
+							</div>
+							<div class="row" style="margin-top:5px;margin-bottom:5px;">
+								<t t-if="website.mp_seller_since">
+									<div class="col-md-4">
+										<i>
+											selling from
+											<span style="">
+												<b><span t-field="seller.create_date" t-options='{"format": "d MMMM y"}'/></b>
+												to till now</span>
+										</i>
+									</div>
+								</t>
+							</div>
+							<div class="row">
+								<div class="col-12 col-md-5 col-lg-4 pt-1">
+									<div t-if="website.mp_seller_contact_btn" style="display:inline;">
+										<a t-if="not request.website.is_public_user()" t-attf-href="mailto:{{ seller.email }}" class="btn btn-primary">Contact Seller</a>
+
+										<button t-else="" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#loginfeed">
+											Contact Seller
+										</button>
+
+									</div>
+
+									<t t-if="website.sudo().get_group_mp_shop_allow()">
+										<t t-if="mp_seller_shop_id and mp_seller_shop_id.website_published and mp_seller_shop_id.active">
+											<a class="btn btn-primary" target="_blank" t-attf-href="/seller/shop/#{mp_seller_shop_id.url_handler}">Visit Shop</a>
+										</t>
+									</t>
+									<div class="modal fade" id="loginfeed" tabindex="-1" role="dialog"  aria-hidden="true">
+											<div class="modal-dialog" role="document">
+												<div class="modal-content">
+												<div class="modal-header">
+													<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+													</button>
+												</div>
+												<div class="modal-body">
+													<h5>
+														You must first <a class="text-bold" t-attf-href="/web/login/?redirect=#{quote_plus(request.httprequest.url)}"> Log in</a> to communicate with the seller.
+													</h5>
+												</div>
+												<div class="modal-footer">
+													<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+												</div>
+												</div>
+											</div>
+										</div>
+								</div>
+								<div class="col-12 col-md-5 col-lg-5 pt-2">
+									<t t-foreach="seller.social_media_link_ids" t-as="social_media">
+										<t t-if="social_media.wk_website_published">
+											<div style='height:38px;width:38px;float:left;'>
+												<a t-attf-href="{{social_media.complete_url}}" target="_blank">
+													<span itemprop="image" t-field="social_media.social_media_id.image" t-options="{'widget': 'image'}" t-att-alt="social_media.social_media_id.name" t-attf-title="#{'Follow on ' + social_media.social_media_id.name}"/>
+												</a>
+											</div>
+										</t>
+									</t>
+								</div>
+								<div class="col-8 col-md-4 col-lg-3 pt-1">
+									<a class="pull-right" target="_blank" href="/contactus" style="text-decoration: underline;">Contact Us about
+										<t t-out="seller.name"/>
+									</a>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="clearfix mt16" id="seller-pannel"/>
+					<div class="oe_structure"/>
+					<div class='container mb16'>
+						<div class="card with-mp-nav-tabs tabbable" id="seller-info-pannel">
+							<div class="card-header" style="padding: 0.5rem;padding-bottom: 0;border-bottom: 0;">
+								<ul class="nav nav-tabs" id="shop-nav-tabs">
+									<li class="nav-item">
+										<a href="#seller_all_prod" class="nav-link active" data-bs-toggle="tab">
+											<span>
+												All Products
+												<span class='badge rounded-pill bg-secondary'><t t-out="len(products)"/>
+													Out Of
+													<t t-out="product_count"/>
+												</span>
+											</span>
+										</a>
+									</li>
+									<t t-if="not website.sudo().get_group_mp_shop_allow() ">
+										<li class="nav-item">
+											<a href="#seller_recent_prod" class="nav-link" id="profile_recently_product_tab" data-bs-toggle="tab">
+												Recently Added Products
+												<input type="hidden" name="seller_id" id="seller_id" t-att-value="int(seller.id)"/>
+												<span class='badge rounded-pill bg-secondary'><t t-out="recent_prod"/></span>
+											</a>
+										</li>
+									</t>
+									<t t-if="website.mp_seller_review">
+										<li class="nav-item">
+											<a href="#rating_review_tab" class="nav-link" data-bs-toggle="tab">
+												Rating &amp; Reviews
+											</a>
+										</li>
+									</t>
+									<t t-if="website.mp_return_policy">
+										<li class="nav-item">
+											<a href="#return_policy_tab" class="nav-link" data-bs-toggle="tab">
+												Return Policy
+											</a>
+										</li>
+									</t>
+									<t t-if="website.mp_shipping_policy">
+										<li class="nav-item">
+											<a href="#shipping_policy_tab" class="nav-link" data-bs-toggle="tab">
+												Shipping Policy
+											</a>
+										</li>
+									</t>
+									<t t-if="website.mp_shipping_address">
+										<li class="nav-item">
+											<a href="#contact_us_tab" class="nav-link" data-bs-toggle="tab">
+												Seller Contact
+											</a>
+										</li>
+									</t>
+								</ul>
+							</div>
+							<div class="card-body">
+								<div class="tab-content" id="shop-tab-content">
+									<div class="tab-pane container active" id="seller_all_prod">
+										<t t-call="odoo_marketplace.shop_recently_product"/>
+										<div class="products_pager">
+											<t t-call="website.pager"/>
+										</div>
+									</div>
+									<t t-if="not website.sudo().get_group_mp_shop_allow() ">
+										<div class="tab-pane" id="seller_recent_prod">
+											<div class="products_pager">
+												<t t-call="website.pager"/>
+											</div>
+										</div>
+									</t>
+									<div class="tab-pane container" id="return_policy_tab">
+										<span class="mp_wrap_content" t-out="seller.return_policy"/>
+									</div>
+									<div class="tab-pane container" id="rating_review_tab">
+										<t t-set="seller_active_review" t-value="seller.fetch_active_review2(seller.id,0,website.mp_review_load_no)"/>
+										<t t-set="can_comment" t-value="sha_in or token or not is_user_public"/>
+										<div class="row">
+										<div class='col-lg-5 col-md-12'>
+											<div class="mt-2" style="font-size:16px;line-height:20px;font-weight:700;">Average Review &amp; Recommendations</div>
+											<t t-call="odoo_marketplace.mp_seller_review_information"/>
+										</div>
+
+
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+	  <div class="modal-content">
+		<div class="modal-header py-0 mt-4">
+			<span class="add-all-review">
+				<p class="tile1-header">WRITE A REVIEW</p>
+			</span>
+			<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+		</div>
+		<div class="modal-body pt-0">
+			<form name="seller_review_form" action="/seller/review" method="post" id="mp-review-form" class="form-horizontal" enctype="multipart/form-data">
+				<div class="container">
+					<div class="review-tiles" t-if="can_comment">
+						<input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+						<input type="hidden" id="seller_id" name="seller_id" t-attf-value="#{seller_id or seller.id}"/>
+						<div style="color:red;font-size:1.5em"></div>
+
+						<div style="color:#337AB7;">
+							<span class="fa fa-thumbs-up fa-2x thumb"></span>
+							<div style="display:inline-block">
+								<input
+									required="required"
+									type="hidden"
+									name="stars"
+									id="rating-star"
+									data-show-clear="false"
+									class="form-control d-none"
+									value=""
+									data-min="0"
+									data-max="5"
+									data-step="1"
+									data-size="sm"
+									data-symbol="&#xf005;"
+									data-glyphicon="false"
+									data-rating-class="rating-fa"/>
+							</div>
+						</div>
+						<div class="input-text mb8" id="review-title-box">
+							<p class="textbox-label mb8">Review Title<sup>
+									<i title="Review" class="fa fa-asterisk fa-icon-smaller" style="color:red"></i>
+								</sup>
+							</p>
+							<input id="title" type="text" class="form-control" name="title" t-attf-value="#{title or ''}" maxlength="200" required="required" placeholder="Write review title"/>
+						</div>
+						<div class="input-text" id="review-summary-box">
+							<p class="textbox-label mb8">Your Review<sup>
+									<i title="Review" class="fa fa-asterisk fa-icon-smaller" style="color:red"></i>
+								</sup>
+							</p>
+							<textarea id="summary" rows="3" name="review" class="form-control" required="required" placeholder="Write Your review..." style="resize: none;height: 100px;"/>
+						</div>
+							<div class="mt8 col-md-12">
+								<div class="row mb8">
+								<div class=" col-md-4">
+									<button id="btn-create-review" type="button" class="btn btn-primary">Add Review</button>
+								</div>
+								<div class=" col-md-8 mt-2">
+									<span id="submit-msg" class="col-md-9"/>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="css_editable_mode_hidden review-tiles" t-if="not can_comment" style="box-shadow: 2px 2px 2px 2px rgba(0,0,0,0.16),0 0 0 1px rgba(0,0,0,0.08);">
+						<span class="add-all-review">
+							<p class="tile1-header">WRITE YOUR REVIEW</p>
+						</span>
+						<p class="mt16">You must be
+							<a t-attf-href="/web/login?redirect=#{quote_plus(request.httprequest.url + '#write-review')}">logged in</a>
+							to post a review.</p>
+					</div>
+				</div>
+			</form>
+		</div>
+	  </div>
+	</div>
+  </div>
+			<div class='col-lg-7 col-md-12'>
+											<div class="row px-2">
+
+												<div class="col-lg-9 col-6 mt-2" style="font-size:18px;line-height:20px;font-weight:700;">Displaying Reviews</div>
+												<div class="col-lg-3 col-6 px-0">
+													<button class="mx-1 py-2 px-2" style="background-color:#1B55EC;color:white;white-space:nowrap;float:right;" data-bs-toggle="modal" data-bs-target="#exampleModal">Write A Review</button>
+												</div>
+											</div>
+										<t t-set="total_reviews" t-value="seller.fetch_active_review(seller.id)"/>
+										<t t-if="seller_active_review">
+											<div class="sort mt-3" id="seller_review_sort" style="padding-right: 20px;padding-left: 20px;border-bottom:3px solid #D8D8D8;">
+												<nav class="navbar navbar-expand-lg navbar-light" style="padding:0px">
+													 <div class="navbar-collapse row">
+														<ul class="nav col-lg-3 col-md-4">
+															<li class="nav-item" style="margin-top: 7px;color:black;">
+																<div class="col-md-12">
+																	<span class="">Total reviews
+																	<span class="">
+																		<span id="viewed">
+																			<t t-out="len(seller_active_review)"/>
+																		</span>
+																		/
+																		<span id="total_seller_reviews">
+																			<t t-out="len(total_reviews)"/>
+																		</span>
+																	</span></span>
+																</div>
+															</li>
+														</ul>
+													<ul class="nav justify-content-end col-lg-9 col-md-8">
+														<li class="nav-item" style="margin-top: 10px;font-size:18px;">
+															<span style="color:#989898;" class="">Sort By:</span>
+														</li>
+
+														<div class="dropdown" style="margin-right:1rem;">
+															<button aria-expanded="false" type="button" aria-haspopup="true" role="button" data-bs-toggle="dropdown" class="btn dropdown-toggle px-0 mx-1" href="#" style="margin-top:11px;">
+															  <span id="selected" style="color:#4a4949;">Most Recent</span>
+															  <span class="caret mx-1"></span></button>
+														
+															<ul class="dropdown-menu review_sort_by" style="min-width:5rem;">
+															  <li><a id="most_recentab" class="dropdown-item active-sort-tab" href="#">Most Recent</a></li>
+															  <li><a id="most_helpfulab" class="dropdown-item" href="#">Most Helpful</a></li>
+															</ul>
+														  </div>
+
+														<li class="nav-item " style="margin-top: 10px;font-size:18px;">
+															<span style="color:#989898;" class="">Filter:</span>
+														</li>
+
+														<div class="dropdown">
+															<button aria-expanded="false" type="button" aria-haspopup="true" role="button" data-bs-toggle="dropdown" class="btn dropdown-toggle px-0 mx-1" href="#" style="margin-top:11px;">
+															  <span id="filter_selected" style="color:#4a4949;">All Stars</span>
+															  <span class="caret mx-1"></span>
+															</button>										
+															<ul class="dropdown-menu review_filter_by" style="min-width:5rem;">
+															  <li><a data-custom-value="-1" class="dropdown-item active-sort-tab" href="#" style="padding: 0rem 1rem;">All stars</a></li>
+															  <li><a data-custom-value="5" class="dropdown-item" href="#" style="padding: 0rem 1rem;">5 star</a></li>
+															  <li><a data-custom-value="4" class="dropdown-item" href="#" style="padding: 0rem 1rem;">4 star</a></li>
+															  <li><a data-custom-value="3"  class="dropdown-item" href="#" style="padding: 0rem 1rem;">3 star</a></li>
+															  <li><a data-custom-value="2" class="dropdown-item" href="#" style="padding: 0rem 1rem;">2 star</a></li>
+															  <li><a data-custom-value="1"  class="dropdown-item" href="#" style="padding: 0rem 1rem;">1 star</a></li>
+															</ul>
+														  </div>												
+													</ul>
+												</div>
+												</nav>
+												<div class="clear"></div>
+											</div>
+										</t>
+										<div class="row" id="seller_all_review">
+											<div class="col-md-12 mp-box-review">
+												<t t-set="seller_review_ids" t-value="seller_active_review"/>
+												<t t-call="odoo_marketplace.mp_seller_review_template"/>
+												<t t-if="len(seller_active_review) == 0">
+													<div class="alert alert-info">
+														<center>
+															<strong>Review Not Found</strong>
+														</center>
+													</div>
+												</t>
+											</div>
+											<div class="col-md-12 mp-box-review_loader" style="display:none;"/>
+											<input type="hidden" name="limit" t-att-value="website.mp_review_load_no" id="limit"/>
+											<input type="hidden" name="seller_id" t-att-value="seller.id" id="seller_id"/>
+											<t t-set="total_viewed" t-value="len(seller_active_review)"/>
+											<t t-if="total_viewed &lt; len(total_reviews)">
+												<div id="mp-load-more-div" class="col-md-12 col-sm-12 col-xs-12">
+													<button id="mp-load-morebtn" class="btn btn-block mp-load-more-btn px-4" style="background-color:#14B8A6;color:white;">Load more</button>
+													<button id="mp-load-morebtn-loder" class="btn btn-block mp-load-more-btn disabled px-4" style="display:none;background-color:#14B8A6;color:white;">
+														<i title="spin" class="fa fa-spinner fa-pulse fa-1x fa-fw"></i>Loading more</button>
+												</div>
+											</t>
+										</div>
+										</div>
+
+									</div>
+									</div>
+									<div class="tab-pane" id="shipping_policy_tab">
+										<span class="mp_wrap_content" t-out="seller.shipping_policy"/>
+									</div>
+									<div class="tab-pane" id="contact_us_tab">
+										<ul class="list-unstyled">
+											<li t-ignore="true">
+												<i title="Phone" class="fa fa-phone"></i>
+												<label>Phone :
+												</label>
+												<span t-out="seller.phone"></span>
+											</li>
+											<li t-ignore="true">
+												<i title="Mobile" class="fa fa-mobile" style="font-size: 18px;margin-left: 3px;margin-right: 3px;"></i>
+												<label>Mobile :
+												</label>
+												<span t-out="seller.mobile"></span>
+											</li>
+											<li t-ignore="true">
+												<i title="Email" class="fa fa-envelope"></i>
+												<label>Email :
+												</label>
+												<span t-out="seller.email"></span>
+											</li>
+										</ul>
+										<t t-if="seller_add_country">
+											<iframe width="100%" height="400" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" t-attf-src="https://maps.google.com/maps?q=#{seller_add_state.name},#{seller_add_country.name}&amp;output=embed"></iframe>
+										</t>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="oe_structure"/>
+				</div>
+				<div class="oe_structure"/>
+		</t>
+		</template>
+
+        <template id="wk_seller_review_template">
+			<t t-call="odoo_marketplace.mp_seller_review_template"/>
+			<t t-if="len(seller_review_ids) == 0">
+				<span>
+					<center>Review Not Found</center>
+				</span>
+			</t>
+			<script>
+				$(".mp-js-rating").rating();
+				$("abbr.timeago").timeago();
+			</script>
+		</template>
+
+        <!-- Template For all seller  -->
+
+		<template id="mp_seller_list" name="Seller List">
+			<t t-call="website.layout">
+				<div id="wrap">
+					<div class="oe_structure"/>
+					<div class="container">
+						<div class="row">
+							<div class="col-xs-12 mt8 mb8">
+								<div class="text-center" style="font-size: 25px;font-weight: 600; margin-bottom: 20px; background-color: #d9edf7; border-color: #6CAFBD; color: #31708f; border: 1px solid; border-radius: 5px;">Our Sellers</div>
+								<t t-foreach="all_shop" t-as="shop_obj">
+									<div class="col-md-3 col-sm-6 col-xs-12 mt8 mb8">
+										<div class="col-xs-12" style="border: 1px solid;padding-top: 10px;padding-bottom: 10px;">
+											<div style="height:150px;width:auto;margin-bottom: 10px; display: block;margin-left: auto;margin-right: auto;">
+												<span itemprop="image" t-field="shop_obj.shop_logo" t-options="{'widget': 'image', 'style':'border-radius:10px;margin:auto;height:150px;'}" t-att-alt="shop_obj.name"/>
+											</div>
+											<div class="row mb4" style="text-align: center;font-weight: 600;">
+												<div class="col-xs-12">
+													<span t-field="shop_obj.name"/>
+												</div>
+											</div>
+											<div class="row" style="text-align:center">
+												<t t-if="website.sudo().get_group_mp_shop_allow() ">
+													<t t-if="shop_obj.sudo().active">
+														<div class="col-xs-12">
+															<a t-attf-href="/seller/shop/#{shop_obj.sudo().url_handler}" class="btn btn-primary mb4">Visit Shop</a>
+														</div>
+													</t>
+												</t>
+												<div class="col-xs-12">
+													<a t-attf-href="/seller/profile/#{shop_obj.sudo().seller_id.url_handler if shop_obj.sudo().seller_id.url_handler else shop_obj.sudo().seller_id.id}" class="btn btn-primary">View Seller Profile</a>
+												</div>
+											</div>
+										</div>
+									</div>
+								</t>
+								<t t-if="not all_shop">
+									<div class="text-center text-muted">
+										<h3 class="css_editable_display">Seller not found.</h3>
+									</div>
+								</t>
+							</div>
+						</div>
+					</div>
+					<div class="oe_structure"/>
+				</div>
+			</t>
+		</template>
+
+        <!-- Seller item -->
+		<template id="seller_list_item" name="Seller List Item">
+			<div itemscope="itemscope">
+				<div class="wk_ribbon-wrapper">
+					<div class="wk_ribbon badge bg-danger p-1">Best Seller</div>
+				</div>
+				<div class="d-flex flex-row flex-md-column flex-lg-row">
+					<div class="col-lg-5 col-xl-5" style="padding:0px">
+						<div style="">
+							<a itemprop="url" t-attf-href="/seller/profile/#{seller_obj.sudo().url_handler if seller_obj.sudo().url_handler else seller_obj.sudo().id}">
+    							<span
+    								itemprop="image"
+    								t-field="seller_obj.sudo().profile_image"
+    								t-options="{'widget': 'image', 'style':'height: 100px;width: 100px;border: 5px solid;border-radius: 4px;border-color: rgb(73, 73, 73);', 'zoom': 'image', 'class':''}"
+    								t-att-alt="seller_obj.sudo().name"/>
+							</a>
+						</div>
+					</div>
+					<div class="ps-4 ps-md-1 ps-xl-2 col-lg-7 col-xl-7">
+						<div class="" style="padding-right: 0px;" id="seller_name">
+							<strong>
+								<a itemprop="name" class="grid-seller-name" t-attf-href="/seller/profile/#{seller_obj.sudo().url_handler if seller_obj.sudo().url_handler else seller_obj.sudo().id}" t-field="seller_obj.sudo().name"/>
+							</strong>
+						</div>
+						<div id="seller_review"></div>
+						<div id="seller_other_info"></div>
+					</div>
+				</div>
+
+				<t t-if="website.sudo().get_group_mp_shop_allow() ">
+					<t t-set="mp_seller_shop_id" t-value="seller_obj.sudo().seller_shop_id"/>
+					<t t-if="mp_seller_shop_id and mp_seller_shop_id.website_published and mp_seller_shop_id.active">
+						<div class="col-12 mt-2" style="min-height:3rem;" id="seller_shop">
+							<div class="container-fluid px-2" style="background-color:rgb(207, 233, 255);border-radius: 3px;">
+								<div style="color:rgb(41, 121, 183);">
+									<i title="Home" class="fa fa fa-home mt4"/>
+									<span class="seller-shop-name">
+										<a t-attf-href="/seller/shop/#{mp_seller_shop_id.sudo().url_handler}"><t t-out="mp_seller_shop_id.name"/></a>
+									</span>
+								</div>
+								<div class="mb4 shop-tag-line">
+									<t t-if="mp_seller_shop_id">
+										<span><t t-out="mp_seller_shop_id.shop_tag_line"/></span>
+									</t>
+								</div>
+							</div>
+						</div>
+					</t>
+					<t t-else="">
+						<div class="col-12 mt-2" style="min-height:3rem;" id="seller_shop">
+							<div class="container"></div>
+						</div>
+					</t>
+				</t>
+			
+
+
+
+				<div class="d-flex flex-row flex-md-column flex-lg-row mt-3" style="border-top: 2px solid #ebe7e7;">
+					<div class="col-4">
+						<t t-if="website.mp_sale_count">
+							<div class="fa fa-line-chart" style="margin-right:5px;font-size:12px;padding-top:5px;">
+								<span class="grid-seller-detail"><t t-out="seller_obj.seller_sales_count()"/>
+									Sales</span>
+							</div>
+						</t>
+					</div>
+					<div class="ms-lg-2 col-4">
+						<t t-if="website.mp_product_count">
+							<div class="fa fa-cubes" style="margin-right:5px;font-size:12px;padding-top:5px;">
+								<span class="grid-seller-detail"><t t-out="seller_obj.seller_products_count()"/>
+									Products</span>
+							</div>
+						</t>
+					</div>
+					<div class="col-4 px-2">
+						<a class="view-profile" itemprop="name" t-attf-href="/seller/profile/#{seller_obj.sudo().url_handler if seller_obj.sudo().url_handler else seller_obj.sudo().id}">
+							<u>View Profile</u>
+						</a>
+					</div>
+				</div>				
+			</div>
+		</template>
+
+		<template id="sellers_list" name="Sellers List">
+			<t t-call="website.layout">
+				<t t-set="additional_title">Sellers</t>
+				<div id="wrap" class="js_sale">
+					<div class="oe_structure"/>
+					<t t-if="not bins">
+						<div class="container">
+							<div class="text-center text-muted mt64 mb16">
+								<img src="/odoo_marketplace/static/src/img/Slice-Seller-Listing.png" alt="There is not any seller yet to display!"/>
+								<h3 class="css_editable_display mt64" style="font-weight: 600;color: #969696;">There is not any seller yet to display!</h3>
+							</div>
+						</div>
+					</t>
+					<div t-if="bins" class="container">
+						<br/>
+						<br/>
+						<div class="row col-md-12 ml0 mr0" style="padding:0px;">
+							<div class="col-md-6" style="padding:0px">
+								<div class="row">
+									<div class="col-md-5 all-seller-label">All Sellers</div>
+									<div class="col-sm-12" style="display:table-row;">
+										<span class="all-seller-count" style="">
+											<t t-out="total_active_seller">Sellers</t>
+											Sellers</span>
+										<span class="all-seller-avl">
+											are currently Active on the Store.</span>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-3"></div>
+							<div class="col-md-3" style="padding:0px">
+								<form t-att-action="keep('/sellers/list/', search=0)" method="get" t-att-class="search_class">
+									<t t-call="website.website_search_box"/>
+								</form>
+							</div>
+						</div>
+						<br/>
+
+						<div class="row o_wsale_products_main_row">
+							<div class="hidden" id="seller_grid_before"></div>
+							<div class="col" id="sellers_grid">
+								<div t-if="bins" class="o_wsale_products_grid_table_wrapper">
+									<table class="table table-borderless m-0" t-att-data-ppg="ppg" t-att-data-ppr="ppr"
+										id="seller_table" style="table-layout:fixed;">
+	                                    <colgroup t-ignore="true">
+	                                        <col t-foreach="ppr" t-as="p"/>
+	                                    </colgroup>
+										<tbody>
+											<tr t-foreach="bins" t-as="tr_sellers">
+												<t t-foreach="tr_sellers" t-as="td_seller">
+													<t t-if="td_seller">
+														<t t-set="seller_obj" t-value="td_seller['product']"/>
+														<td
+															t-att-seller_id="seller_obj.id"
+															t-att-colspan="td_seller['x'] != 1 and td_seller['x']"
+															t-att-rowspan="td_seller['y'] != 1 and td_seller['y']"
+															class="mp_seller oe_product pt-0"
+															style="vertical-align: top;">
+															<div t-attf-class="o_wsale_product_grid_wrapper o_wsale_product_grid_wrapper_#{td_seller['x']}_#{td_seller['y']} p-3" style="vertical-align: top;border:1px solid rgba(0, 0, 0, 0.125)">
+																<t t-call="odoo_marketplace.seller_list_item">
+																	<t t-set="product_image_big" t-value="td_seller['x'] + td_seller['y'] &gt; 2"/>
+																</t>
+															</div>
+														</td>
+													</t>
+													<td t-else="" class="oe-height-2"/>
+												</t>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+								<t t-else="">
+								   <div class="text-center text-muted">
+										<h3 class="mt8">No seller defined.</h3>
+								   </div>
+							   </t>
+							</div>
+						</div>
+						<div class="products_pager">
+							<t t-call="website.pager"/>
+						</div>
+					</div>
+					<div class="oe_structure mb32"/>
+				</div>
+			</t>
+		</template>
+
+        <template id="seller_item_list_custome_view2" inherit_id="odoo_marketplace.seller_list_item" active="True" customize_show="True" name="Seller Reviews">
+			<xpath expr="//div[@id='seller_review']" position="inside">
+				<div class="d-flex flex-row" style="padding-right: 0px;">
+					<t t-set="val" t-value="seller_obj.avg_review()"/>
+					<t t-set="seller_reviews" t-value="len(seller_obj.fetch_active_review(seller_obj.sudo().id))"/>
+					<input
+						id="input-5a"
+						class="rating form-control d-none col-md-2"
+						t-attf-value="#{seller_obj.avg_review()}"
+						data-show-clear="false"
+						data-show-caption="false"
+						data-min="0"
+						data-max="5"
+						data-step="0.1"
+						data-readonly="true"
+						data-size="xxs"
+						data-symbol="&#xf005;"
+						data-glyphicon="false"
+						data-rating-class="rating-fa"/>
+					<span class="ps-2" style="color: #777777;">(<t t-out="seller_reviews"/>)</span>
+				</div>
+			</xpath>
+		</template>
+
+        <template id="seller_item_list_custome_view3" inherit_id="odoo_marketplace.seller_list_item" active="True" customize_show="True" name="Seller Sales/Products/Location">
+			<xpath expr="//div[@id='seller_other_info']" position="inside">
+				<div class="" style="padding-right: 0px;">
+					<t t-set="seller_add_state" t-value="seller_obj.state_id"/>
+					<t t-set="seller_add_country" t-value="seller_obj.country_id"/>
+					<t t-if="seller_add_state and seller_add_country">
+						<div class="fa fa-map-marker" title="Seller Address">
+							<span class="grid-seller-detail"><t t-out="seller_add_state.name"/>,
+								<t t-out="seller_add_country.name"/></span>
+						</div>
+					</t>
+				</div>
+
+			</xpath>
+		</template>
+
+        <template id="mp_seller_review_template" name="Seller Review template">
+			<t t-foreach="seller_review_ids" t-as="message">
+				<t t-if="message.rating >= 1">
+					<div class="seller_review_div">
+						<div class="row mt16 mb16">
+							<input type="hidden" name="seller_review_id" t-att-value="message.id" id="seller_review_id"/>
+							<t t-set="vote" t-value="seller.fetch_user_vote(message.id)"/>
+							<t t-set="helpful" t-value="message.helpful"/>
+							<t t-set="not_helpful" t-value="message.not_helpful"/>
+							<t t-set="total_votes" t-value="message.total_votes"/>							
+							<div class="col-md-12 col-xs-12 col-sm-12">
+								<div class="col-md-12 seller-review-bubble">
+									<div style="padding: 10px 0px 0px 10px;">
+											
+											
+											<div class="" style="font-weight:700;">
+												<t t-out="message.title"/>
+											</div>
+											<div class="">											
+												<div class="row mt-2">
+													<div class="col-md-2 col-xs-8" style="padding-right:0px;">
+														<input
+															class="star-readonly-review rating form-control d-none mp-js-rating"
+															t-attf-value="#{message.rating}"
+															data-show-clear="false"
+															data-show-caption="false"
+															data-min="0"
+															data-max="5"
+															data-step="0.1"
+															data-readonly="true"
+															data-size="xxs"
+															data-symbol="&#xf005;"
+															data-glyphicon="false"
+															data-rating-class="rating-fa"/>
+													</div>
+													<div class="col-md-6 hidden-xs px-3" >							
+														<abbr class="timeago text-muted" t-att-title="seller.get_review_current_time(message.id)" style="text-decoration: none;"></abbr>
+													</div>
+												</div>
+												<div class="row mt-2">
+													<div class="col-sm-12 col-xs-12" style="color:#64687A"><t t-out="message.msg"/></div>
+												</div>
+												<div class="row">
+												<div class="col-xs-12 col-sm-2 col-lg-2" style="margin-top:0.5rem;padding-right:0px;">
+													<div class="col-sm-12 hidden-xs" style="">
+														<span class="reviewer-imgName" t-if="message.partner_id.sudo().image_1920">
+															<img class="reviewer-imgName" t-attf-src="/web/image/res.partner/#{message.partner_id.id}/image_1920" style="width: 100%; margin-right: 10px;" alt="Image"/>
+														</span>
+														<span t-if="not message.partner_id.sudo().image_1920" class="reviewer-imgName" t-attf-style="background-color: #{message.color}"><t t-out="message.partner_id.name[0].upper()"/></span>
+													</div>
+												</div>
+												<div class="col-xs-12 col-sm-10 col-lg-10 px-0" style="margin-top:1.5rem;">
+													<t t-out="message.partner_id.name"/>
+												</div>
+											</div>
+
+
+												
+
+												<section class="container seller_review_discussion">
+													<div class="col-md-12 mt16 mb16">
+														<div class="row">
+															<div class="col-md-5 py-2">
+															<div class="text-muted row mt-1">
+																<div class="col-md-6">
+																	<h3 class="fa fa-pencil">
+																		<a id="comments" class="text-primary seller-review-write-comments" style="cursor:pointer;">
+																			<span style="color:#1B55EC;">Write Comment</span>
+																			
+																		</a>
+																	</h3>
+																</div>
+																<div class="col-md-6">
+																	<h3 class="fa fa-comments-o">
+																		<t t-set="count" t-value="len(message.website_message_ids)"/>
+																		<t t-if="count">
+																			<a id="comments" class="text-primary seller-review-comments" style="cursor:pointer;">
+																				<span style="color:#1B55EC;">
+																				<span class="o_message_count">
+																					<t t-out="count"/>
+																				</span>
+																				<t t-if="count == 1">comment</t>
+																				<t t-else="">comments</t>
+																			</span>
+																			</a>
+																		</t>
+																		<t t-else="">
+																			<span style="color:#1B55EC;">
+																			There are no comments for now.
+																			</span>
+																		</t>
+																	</h3>
+																</div>
+															</div>
+														</div>
+														<div class="col-md-7 py-2" style="background-color:#EFF6FF;">
+															<div class="row seller-review-bottom">
+																<div class="col-sm-6" style="color:#484166;">Was this review helpful?</div>
+																<div class="col-sm-6 col-xs-6" style="height: 30px;">
+																	<t t-if="vote[0] == False">
+																		<div class="mp-sprite mp-TopLeft" style="display: inline-block;"></div>
+																		<div class="middle-grey-button text hf-num" style="display: inline-block;padding: 0px;top: -13px;margin-left: 5px;">
+																			<span class="review_helpful" style="padding-left: 3px;padding-right: 3px;position: relative;top: 2px;"><t t-out="helpful"/></span>
+																		</div>
+																	</t>
+																	<t t-if="vote[0] == True">
+																		<div class="mp-sprite mp-BottomLeft"></div>
+																		<div class="middle-grey-button text hf-num" style="display: inline-block;padding: 0px;top: -13px;margin-left: 5px;">
+																			<span class="review_helpful" style="padding-left: 3px;padding-right: 3px;position: relative;top: 2px;"><t t-out="helpful"/></span>
+																		</div>
+																	</t>
+																	<t t-if="vote[1] == False">
+																		<div class="mp-sprite mp-TopRight"></div>
+																		<div class="middle-grey-button text hf-num" style="display: inline-block;padding: 0px;top: -13px;margin-left: 5px;">
+																			<span class="review_not_helpful" style="padding-left: 3px;padding-right: 3px;position: relative;top: 2px;"><t t-out="not_helpful"/></span>
+																		</div>
+																	</t>
+																	<t t-if="vote[1] == True">
+																		<div class="mp-sprite mp-BottomRight"></div>
+																		<div class="middle-grey-button text hf-num" style="display: inline-block;padding: 0px;top: -13px;margin-left: 5px;">
+																			<span class="review_not_helpful" style="padding-left: 3px;padding-right: 3px;position: relative;top: 2px;"><t t-out="not_helpful"/></span>
+																		</div>
+																	</t>
+																</div>
+															</div>
+														</div>
+
+
+														</div>
+														<div class="col-md-12 wk_message_thread" style="display:block;">
+															<t t-call="portal.message_thread">
+																<t t-set="object" t-value="message"/>
+															</t>
+														</div>
+													</div>
+												</section>
+											</div>										
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</t>
+			</t>
+		</template>
+
+        <template id="mp_seller_review_information" name="Seller's Reviews Panel">
+			<div class="row mb16 mt-5">
+				<t t-set="is_user_public" t-value="website.env.user == request.website.user_id"/>
+				<t t-set="can_comment" t-value="sha_in or token or not is_user_public"/>
+				<div class="col-md-12">
+					<div class="row">
+						<div class="col-md-12">
+							<div class="col-md-12 review-tiles" style="box-shadow: 2px 2px 2px 2px rgba(0,0,0,0.16),0 0 0 1px rgba(0,0,0,0.08);border-radius:10px;">								
+								<div class="" style="margin-top: 10px;">
+									<div class="row review_recommendation" style="text-align: -webkit-center;padding: 0px 22px;margin-top:5%;">
+										<div class="col-md-5" style="max-height: 130px;text-align: -webkit-center;">
+										<div class="avg-rating-cir" t-att-data-percent="avg_val*20"></div>
+										<div class="rating-bar-star mt-2">
+											<div class="fa-stack fa-2x mt-1">
+												<i title="star" class="fa fa-star fa-stack-2x" style="color:#FFC930;"></i>
+											</div>
+										</div>
+									</div>
+										<div style="text-align:center;" class="col-md-6 mt-4">
+											<div class="recommendation_detail" >
+											<span style="font-size:18px;font-weight:400;text-align:center;"><t t-out="avg_val"/> Out Of 5</span>
+											<div class="mt-2 pt-2" style="border-top:2px solid #D8D8D8; text-align:center;font-size:16px;font-weight:400;">Based on <t t-out="total_reviews"/> reviews</div>
+											</div>
+										</div>
+									</div>
+									<div class="col-12 mt-2" style="text-align:center;padding: 0px 0px 0px 45px;">
+										<div class="fa-star-div">
+											<span class="fa fa-star"/>
+											<span class="fa fa-star"/>
+											<span class="fa fa-star"/>
+											<span class="fa fa-star"/>
+											<span class="fa fa-star"/>
+										</div>
+										<span class="row" style="--gutter-x: 4px;">
+										<span class="progress star-progress-bar px-0 mt-2 col-10">
+											<span class="progress-bar" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" t-attf-style="width:#{100*seller.total_star_count(5)/total_reviews if total_reviews else 0}%; background-color:#39B38A;"></span>
+										</span>
+										<span class="col-2" style="float:right;"><t t-out="seller.total_star_count(5)"/></span></span>
+
+										<div class="fa-star-div">
+											<span class="fa fa-star"/>
+											<span class="fa fa-star"/>
+											<span class="fa fa-star"/>
+											<span class="fa fa-star"/></div>
+										<span class="row" style="--gutter-x: 4px;">
+										<span class="progress star-progress-bar px-0 mt-2 col-10">
+											<span class="progress-bar" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" t-attf-style="width:#{100*seller.total_star_count(4)/total_reviews if total_reviews else 0}%; background-color:#5CD97F;"></span>
+										</span>
+										<span class="col-2" style="float:right;"><t t-out="seller.total_star_count(4)"/></span></span>
+
+										<div class="fa-star-div">
+											<span class="fa fa-star"/>
+											<span class="fa fa-star"/>
+											<span class="fa fa-star"/></div>
+										<span class="row" style="--gutter-x: 4px;">
+										<span class="progress star-progress-bar px-0 mt-2 col-10">
+											<span class="progress-bar" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" t-attf-style="width:#{100*seller.total_star_count(3)/total_reviews if total_reviews else 0}%; background-color:#E85115;"></span>
+										</span>
+										<span class="col-2" style="float:right;"><t t-out="seller.total_star_count(3)"/></span></span>
+
+										<span class="row" style="--gutter-x: 4px;">
+											<div class="fa-star-div">
+												<span class="fa fa-star"/>
+												<span class="fa fa-star"/></div>
+										<span class="progress star-progress-bar px-0 mt-2 col-10">
+											<span class="progress-bar" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" t-attf-style="width:#{100*seller.total_star_count(2)/total_reviews if total_reviews else 0}%; background-color:#B14500;"></span>
+										</span>
+										<span class="col-2" style="float:right;"><t t-out="seller.total_star_count(2)"/></span></span>
+
+										<div class="fa-star-div">
+											<span class="fa fa-star"/></div>
+										<span class="row" style="--gutter-x: 4px;">
+										<span class="progress star-progress-bar px-0 mt-2 col-10">
+											<span class="progress-bar" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" t-attf-style="width:#{100*seller.total_star_count(1)/total_reviews if total_reviews else 0}%; background-color:#E70E12;"></span>
+										</span>
+										<span class="col-2" style="float:right;"><t t-out="seller.total_star_count(1)"/></span></span><br/>																			
+									</div>
+								</div>
+								<hr style="color:#898686;height:2px;margin-top:10px;margin-bottom:10px;padding:0px;"/>
+								<div class="row review_recommendation" style="text-align: -webkit-center;padding: 0px 22px;margin-top:5%;">
+									<div class="col-md-5" style="max-height: 130px;text-align: -webkit-center;">
+										<div class="recommendation-cir" t-att-data-percent="seller.total_active_recommendation()[1]"></div>
+										<div class="rating-bar-star mt-3">
+											<i title="thumbs" style="color:#35A7E8;" class="fa fa-thumbs-o-up fa-3x"></i>
+										</div>
+									</div>
+									<div class="col-md-6 px-0 mt-4">
+										<div class="recommendation_detail" >
+										<span style="font-size:18px;font-weight:400;text-align:center;"><t t-out="round(seller.total_active_recommendation()[1],2)"/>% recommendation</span>
+										<t t-if="seller.total_active_recommendation()[0] &gt; 0">
+											<div style="border-top:2px solid #D8D8D8; text-align:center;font-size:16px;font-weight:400;">Based on
+												<t t-out="seller.total_active_recommendation()[0]"/>
+												recommendations
+											</div>
+										</t>
+										</div>
+										<br/>
+									</div>
+									<div class="row px-5">
+										<div class="col-12 px-3 py-4 my-3" style="text-align:left;background-color:#EFF6FF;" t-if="can_comment">
+											<div id="recommend-msg">
+                                                <p t-if="already_recommend != None">
+                                                    Recommendation already received, for modification re-click your choice below.
+                                                </p>
+                                                <p style="font-weight:700;font-size:14px;line-height:20px;" t-if="already_recommend == None">
+                                                    Would you recommend this seller?
+                                                </p>
+                                            </div>
+											<button style="background-color:#09ab75;color:white;" id="recommend-yes" type="button" t-att-class="'btn disabled' if already_recommend == 'yes' else 'btn btn-info'">Yes</button>
+											<button style="background-color:#F87171;color:white;" id="recommend-no" type="button" t-att-class="'btn disabled' if already_recommend == 'no' else 'btn btn-info'">No</button>
+										</div>
+										<div class="css_editable_mode_hidden review-tiles" t-if="not can_comment" style="text-align:center;box-shadow: 2px 2px 2px 2px rgba(0,0,0,0.16),0 0 0 1px rgba(0,0,0,0.08);">
+											<p>Want to recommend this seller?</p>
+											<p class="mt16">You must be
+												<a t-attf-href="/web/login?redirect=#{quote_plus(request.httprequest.url + '#write-review')}">logged in</a>
+												for recommendation.</p>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</template>
+
+        <template id="message_thread_for_mp_seller_review">
+			<section id="seller_review_discussion" class="mp_review_chatter">
+				<t t-call="odoo_marketplace.my_message_thread">
+					<t t-out="message"/>
+					<t t-set="object" t-value="message"/>
+					<t t-set="chatter_mode" t-value="'json'"/>
+				</t>
+			</section>
+		</template>
+
+    </data>
+</odoo>

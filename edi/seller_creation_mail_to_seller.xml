@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2016-Present Webkul Software Pvt. Ltd. (<https://webkul.com/>) -->
+<!-- See LICENSE file for full copyright and licensing details. -->
+<!-- License URL : https://store.webkul.com/license.html/ -->
+
+<odoo>
+    <data noupdate="1">
+        <!--Email template for seller regarding approval-->
+        <record id="marketplace_email_template_for_seller_by_admin" model="mail.template">
+            <field name="name">Seller Request Mail By Admin To Seller</field>
+            <field name="email_from">{{ (object.company_id.email or ctx.get('company') and ctx.get('company').email or '') }}</field>
+            <field name="subject">Thank You For Your Seller Registration.</field>
+            <field name="email_to">{{ (object.email or '') }}</field>
+            <field name="model_id" ref="base.model_res_partner"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="lang">{{object.lang}}</field>
+            <field name="body_html" type="html">
+                <div style="font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; ">
+                    <p>Dear <t t-out="object.name"></t>,</p>
+                    <p>Thank you for registering to join our marketplace.</p>
+                    <p>We have received your application and will review it shortly. Our team will contact you if additional information is needed or to provide further instructions.</p>
+                    <t t-set="action_id" t-value="str(ctx.get('action_id'))"/>
+                    <t t-set="share_link" t-value="'/web#action='+action_id+'&amp;model='+object._name+'&amp;id='+str(object.id)+'&amp;view_type=form'" /><br/>
+                    <a t-attf-href="#{share_link}" style="background-color: #875A7B; padding: 10px; text-decoration: none; color: #fff; border-radius: 5px; font-size: 12px;"><strong>View Request</strong></a><br/><br/>
+                    <p>We appreciate your interest and look forward to welcoming you to our marketplace.</p>
+                    <p>Best regards,</p>
+                    <t t-out="object.company_id and object.company_id.partner_id.name or ctx.get('company') and ctx.get('company').partner_id.name or object.user_ids and object.user_ids[0].company_id.name or ''"/>
+                </div>
+            </field>
+        </record>
+    </data>
+</odoo>

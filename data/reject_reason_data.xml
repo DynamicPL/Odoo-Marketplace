@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2016-Present Webkul Software Pvt. Ltd. (<https://webkul.com/>) -->
+<!-- See LICENSE file for full copyright and licensing details. -->
+<!-- License URL : https://store.webkul.com/license.html/ -->
+
+<odoo>
+    <data noupdate="0">
+        <record id="reject_reason_data1" model="marketplace.reject.reason">
+            <field name="name">Pricing is unrealistic</field>
+            <field name="reason_type">product_reason</field>
+        </record>
+        <record id="reject_reason_data2" model="marketplace.reject.reason">
+            <field name="name">Insufficient or unclear product description</field>
+            <field name="reason_type">product_reason</field>
+        </record>
+        <record id="reject_reason_data3" model="marketplace.reject.reason">
+            <field name="name">Inappropriate images provided</field>
+            <field name="reason_type">product_reason</field>
+        </record>
+        <record id="reject_reason_data13" model="marketplace.reject.reason">
+            <field name="name">Others</field>
+            <field name="reason_type">product_reason</field>
+        </record>
+        <record id="reject_reason_data4" model="marketplace.reject.reason">
+            <field name="name">Unclear business history</field>
+            <field name="reason_type">seller_profile_reason</field>
+        </record>
+        <record id="reject_reason_data5" model="marketplace.reject.reason">
+            <field name="name">Incomplete seller registration details</field>
+            <field name="reason_type">seller_profile_reason</field>
+        </record>
+        <record id="reject_reason_data6" model="marketplace.reject.reason">
+            <field name="name">Failure to meet the eligibility criteria</field>
+            <field name="reason_type">seller_profile_reason</field>
+        </record>
+        <record id="reject_reason_data14" model="marketplace.reject.reason">
+            <field name="name">Others</field>
+            <field name="reason_type">seller_profile_reason</field>
+        </record>
+        <record id="reject_reason_data7" model="marketplace.reject.reason">
+            <field name="name">Does not meet the platform's payment eligibility criteria</field>
+            <field name="reason_type">seller_payment_reason</field>
+        </record>
+        <record id="reject_reason_data8" model="marketplace.reject.reason">
+            <field name="name">Seller has outstanding disputes with buyers</field>
+            <field name="reason_type">seller_payment_reason</field>
+        </record>
+        <record id="reject_reason_data9" model="marketplace.reject.reason">
+            <field name="name">Order(s) have pending cancellations or refunds</field>
+            <field name="reason_type">seller_payment_reason</field>
+        </record>
+        <record id="reject_reason_data15" model="marketplace.reject.reason">
+            <field name="name">Others</field>
+            <field name="reason_type">seller_payment_reason</field>
+        </record>
+        <record id="reject_reason_data10" model="marketplace.reject.reason">
+            <field name="name">Unrealistic stock quantity provided</field>
+            <field name="reason_type">inventory_reason</field>
+        </record>
+        <record id="reject_reason_data11" model="marketplace.reject.reason">
+            <field name="name">Discrepancies in the stock quantity</field>
+            <field name="reason_type">inventory_reason</field>
+        </record>
+        <record id="reject_reason_data12" model="marketplace.reject.reason">
+            <field name="name">Attempting to update stock for unpublished products</field>
+            <field name="reason_type">inventory_reason</field>
+        </record>
+        <record id="reject_reason_data16" model="marketplace.reject.reason">
+            <field name="name">Others</field>
+            <field name="reason_type">inventory_reason</field>
+        </record>
+    </data>
+</odoo>

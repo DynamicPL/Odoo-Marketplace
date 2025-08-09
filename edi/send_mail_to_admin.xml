@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<!-- Copyright (c) 2016-Present Webkul Software Pvt. Ltd. (<https://webkul.com/>) -->
+<!-- See LICENSE file for full copyright and licensing details. -->
+<!-- License URL : https://store.webkul.com/license.html/ -->
+
+<odoo>
+    <data noupdate="1">
+        <!--Email template for seller_product_approval-->
+        <record id="min_qnty_mail_id" model="mail.template">
+            <field name="name">Notification Mail to Seller On Low Quantity</field>
+            <field name="email_from">{{ (object.company_id.email) or (ctx.get('company') and ctx.get('company').email) or '' }}</field>
+            <field name="subject">Less Quantity Alert!!</field>
+            <field name="email_to">{{ (ctx.get("seller").email if ctx.get("seller") else '') }}</field>
+            <field name="model_id" ref="odoo_marketplace.model_sale_order" />
+            <field name="auto_delete" eval="True" />
+            <field name="lang">{{object.partner_id.lang}}</field>
+            <field name="body_html" type="html">
+                <div
+                    style="font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; ">
+                    <t t-set="product_list"
+                        t-value="object.get_seller_product_list(ctx.get('seller'))" />
+
+                    <p>
+                        <h6 style="font-family: 'Times New Roman'">
+                            For the below-listed products, only a few quantities are available in
+                            the inventory.
+                        </h6>
+                        <h6  style="font-family: 'Times New Roman'">
+                            Please update stock items before it reaches zero to avoid any
+                            disruption.
+                        </h6>
+                    </p>
+                    <br></br>
+
+                    <strong>Product Name: </strong>
+                    <t t-out="product_list or '--not found---'" />
+                    <br></br>
+
+                    <strong>Product Variant:</strong>
+                    <t t-if="ctx.get('product')"><t t-esc="ctx.get('product').display_name or ''" /></t>
+
+                    <br></br>
+                    <strong>Available Units:</strong>
+                    <t t-if="ctx.get('forecasted_val')"><t t-esc="ctx.get('forecasted_val') or ''" /></t>
+
+                    
+                </div>
+            </field>
+
+        </record>
+    </data>
+</odoo>

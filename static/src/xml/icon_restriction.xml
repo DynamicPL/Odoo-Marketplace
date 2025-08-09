@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+
+<t t-inherit="mail.MessagingMenu" t-inherit-mode="extension">
+  <xpath expr="//Dropdown" position="replace">
+  <t t-if="state.seller">
+      <Dropdown t-if="!env.inDiscussApp" autoOpen="false" beforeOpen.bind="beforeOpen" onStateChanged="state => this.state.isOpen = state.open" position="'bottom-end'" menuClass="discussSystray.menuClass" class="discussSystray.class">
+            <t t-set-slot="toggler">
+                <i class="fa fa-lg fa-comments" role="img" aria-label="Messages" t-on-click="() => store.discuss.activeTab = ui.isSmall and store.discuss.activeTab === 'main' ? 'main' : store.discuss.activeTab"></i>
+                <span t-if="counter" class="o-mail-MessagingMenu-counter badge rounded-pill"><t t-esc="counter"/></span>
+            </t>
+            <t t-set-slot="default">
+                <t t-call="mail.MessagingMenu.content"/>
+            </t>
+        </Dropdown>
+        <t t-else="" t-call="mail.MessagingMenu.content"/>
+  </t>
+  <t t-if="!seller">
+    <span></span>
+  </t>
+</xpath>
+
+</t>
+<t t-inherit="mail.ActivityMenu" t-inherit-mode="extension">
+  <xpath expr="//Dropdown" position="attributes">
+    <attribute name="t-if">state.seller</attribute>
+</xpath>
+</t>
+
+<t t-inherit="web.DebugMenu" t-inherit-mode="extension">
+  <xpath expr="//Dropdown" position="attributes">
+    <attribute name="t-if">state.seller</attribute>
+</xpath>
+</t>
+
+</templates>
